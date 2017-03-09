@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ratings</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="ratingsStyle.css">
+</head>
+<body>
+
+    <div id="header">
+        <img src="/Users/ashleymariecramer/IdeaProjects/ratings/src/main/resources/images/black_swan_logo.jpg">
+        <h1>Black Swan Ratings Tracker</h1>
+    </div>
+
+    <div class="container">
+        <div id="message">
+            <h2>Please login</h2>
+        </div>
+
+        <form id="login_form" name="login_form" onsubmit="return false">
+            <label>Username: <input type="text" name="username"></label>
+            <!-- TODO: Email address is username or allow employees to choose a username
+            TODO: - either way needs to be unique - type 'email' or just 'text'?-->
+            <label>Password: <input type="password" name="password"></label> <!-- password type keeps text entered hidden -->
+            <button id="login_button" type="submit">Login!</button>
+            Not yet created your own account? <button id="create_account_button" type="submit">Sign up!</button>
+        </form>
+
+        <form id="logout_form" name="logout_form" onsubmit="return false">
+            <button id="logout_button" type="submit">Log out</button>
+        </form>
+
+        <form id="signup_form" name="signup_form" onsubmit="return false">
+            <label>First Name: <input type="text" name="firstName"></label>
+            <label>Surname: <input type="text" name="surname"></label>
+            <label>Username(email address): <input type="text" name="username"></label>
+            <!-- TODO: Email address is username or allow employees to choose a username
+            TODO: - either way needs to be unique - type 'email' or just 'text'?-->
+            <label>Password: <input type="text" name="password"></label>
+            <button id="signup_button" type="submit" type="submit">Sign up!</button>
+        </form>
+
+
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
+    <script src="ratings.js"></script>
+</body>
+</html>
