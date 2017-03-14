@@ -25,9 +25,8 @@ public class AllBookingsService {
         dto.put("rating", booking.getRating());
         dto.put("reviewURL", booking.getReviewURL());
         dto.put("employee", booking.getEmployee());
-        dto.put("guestFirstName", booking.getGuest().getFirstName());
-        dto.put("guestSurname", booking.getGuest().getSurname());
-        //here we need stream because there are more than one game player per game
+        dto.put("guestFirstName", booking.getGuestFirstName());
+        dto.put("guestSurname", booking.getGuestSurname());
         return dto;
     }
 

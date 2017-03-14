@@ -9,5 +9,5 @@ import java.util.List;
 @RepositoryRestResource
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     List<Employee> findEmployeesByUsername(@Param("name") String name); //This one is used on SalvoApplication security
-//    Employee findEmployeeByUsername(@Param("name") String name); //This one is used on SalvoApplication security
+    Employee findByUsername(@Param("name") String name); //This one is used on SalvoApplication security
 }

@@ -22,8 +22,8 @@ public class AllBookingsAssignedToEmployeeService {
         dto.put("reservationWebsite", booking.getReservationWebsite());
         dto.put("checkIn", booking.getCheckIn());
         dto.put("checkOut", booking.getCheckOut());
-        dto.put("guestFirstName", booking.getGuest().getFirstName());
-        dto.put("guestSurname", booking.getGuest().getSurname());
+        dto.put("guestFirstName", booking.getGuestFirstName());
+        dto.put("guestSurname", booking.getGuestSurname());
 
         return dto;
     }

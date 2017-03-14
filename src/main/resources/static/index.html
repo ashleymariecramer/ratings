@@ -9,7 +9,7 @@
 <body>
 
     <div id="header">
-        <img src="/Users/ashleymariecramer/IdeaProjects/ratings/src/main/resources/images/black_swan_logo.jpg">
+        <!--<img class="logo-img" src="images/black_swan_logo.jpg" alt="logo"/>-->
         <h1>Black Swan Ratings Tracker</h1>
     </div>
 
@@ -34,7 +34,7 @@
         <form id="signup_form" name="signup_form" onsubmit="return false">
             <label>First Name: <input type="text" name="firstName"></label>
             <label>Surname: <input type="text" name="surname"></label>
-            <label>Username(email address): <input type="text" name="username"></label>
+            <label>Username: <input type="text" name="username"></label>
             <!-- TODO: Email address is username or allow employees to choose a username
             TODO: - either way needs to be unique - type 'email' or just 'text'?-->
             <label>Password: <input type="text" name="password"></label>
@@ -42,6 +42,28 @@
         </form>
 
 
+        <form id="create_booking_form" name="create_booking_form" onsubmit="return false">
+            <label>Booking Number: <input type="text" name="bookingNumber"></label>
+            <label>Guest First Name: <input type="text" name="guestFirstName"></label>
+            <label>Guest Surname: <input type="text" name="guestSurname"></label>
+            <label>Website used:
+                <input type="radio" name="reservationWebsite" value="Booking">Booking
+                <input type="radio" name="reservationWebsite" value="HostelWorld">HostelWorld
+            </label>
+            <label>Check-in Date: <input type="date" name="checkInDate"></label>
+            <label>Check-out Date: <input type="date" name="checkOutDate"></label>
+            <label>Rating: <input type="number" name="rating"></label>
+            <label>Link to Review: <input type="url" name="reviewURL"></label>
+            <!--TODO: later use back end to generate a list of employees to choose from (drop down)-->
+            <label>Person in charge: <input type="text" name="employee"></label>
+            <!--TODO: later use back end to generate a list of guests to choose from (drop down)-->
+            <button id="save_booking_button" type="submit" type="submit">Save Booking</button>
+        </form>
+
+
+        <button id="create_booking_button" type="submit" type="submit">New Booking</button>
+
+        <button id="show_bookings_button" type="submit" type="submit">Show All Bookings</button>
     </div>
 
 

@@ -9,4 +9,5 @@ import java.util.List;
 @RepositoryRestResource
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findBookingsByEmployee(@Param("name") String name); //Should be used to return employee_view of guest by logged in user
+    Booking findByBookingNumber(String bookingNumber);
 }
