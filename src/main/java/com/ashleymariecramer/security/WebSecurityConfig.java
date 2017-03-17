@@ -26,7 +26,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             http
                     .authorizeRequests()
 //                    .antMatchers("/employee_view/**").hasAuthority("USER")
-//                    .antMatchers("/manager_view/**" ).hasAuthority("ADMIN") //TODO: change this back after testing uncomment here & removes from permitALL
+//                    .antMatchers("/manager_view/**", "/employees", "bookings" ).hasAuthority("ADMIN") //TODO: change this back after testing uncomment here & removes from permitALL
                     .antMatchers("index.html", "/", "", "/rest/**", "ratings.js", "/employee_view/**", "/manager_view/**" ).permitAll()//For pages that can be seen by all TODO: all visible for now
                     .and()
                     .formLogin() //This shows it uses form-based authentication

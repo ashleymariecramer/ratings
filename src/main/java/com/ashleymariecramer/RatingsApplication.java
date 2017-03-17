@@ -13,7 +13,7 @@ import java.util.Arrays;
 public class RatingsApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(RatingsApplication.class, args);
+		SpringApplication.run(RatingsApplication.class, args); // method to launch an application
 
 	}
 

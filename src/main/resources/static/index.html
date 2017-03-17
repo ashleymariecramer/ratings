@@ -55,7 +55,15 @@
             <label>Rating: <input type="number" name="rating"></label>
             <label>Link to Review: <input type="url" name="reviewURL"></label>
             <!--TODO: later use back end to generate a list of employees to choose from (drop down)-->
-            <label>Person in charge: <input type="text" name="employee"></label>
+            <label>Person in charge:
+                <select name="employee" id="employeeList">
+                    <option value="null">Choose person</option>-->
+                    <!--<option id="1" value="ac">Ashley</option>-->
+                    <!--<option id="2" value="amc">Ash</option>-->
+                    <!--<option id="3" value="tj">Tom</option>-->
+                </select>
+            </label>
+
             <!--TODO: later use back end to generate a list of guests to choose from (drop down)-->
             <button id="save_booking_button" type="submit" type="submit">Save Booking</button>
         </form>

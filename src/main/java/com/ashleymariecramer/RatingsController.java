@@ -1,9 +1,6 @@
 package com.ashleymariecramer;
 
-import com.ashleymariecramer.services.AllBookingsAssignedToEmployeeService;
-import com.ashleymariecramer.services.AllBookingsService;
-import com.ashleymariecramer.services.EntityConstructionService;
-import com.ashleymariecramer.services.StringToDateService;
+import com.ashleymariecramer.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,11 +31,13 @@ public class RatingsController {
     private EntityConstructionService entityConstructionService;
     @Autowired
     private StringToDateService stringToDateService;
+    @Autowired
+    private EmployeeService employeeService;
 
-    @RequestMapping("/")
-    public String index() {
-        return "Greetings from Spring Boot!";
-    }
+//    @RequestMapping("/")
+//    public String index() {
+//        return "Greetings from Spring Boot!";
+//    }
 
     /*********************************** API / EMPLOYEES ****************************************/
     //1. Create new employees
@@ -64,8 +63,14 @@ public class RatingsController {
         }
     }
 
-    /****************************** API / GUESTS **************************************/
-    //2. Create new guests in the system
+    /****************************** API / GET ALL EMPLOYEES USERNAMES **************************************/
+    //2. Return a list of all employees saved in system
+    @RequestMapping(path = "/all_employees_usernames", method = RequestMethod.GET)
+    public List<Object> getAllEmployees() {
+        return eRepo.findAll().stream().map(employee -> employeeService.makeUsernameListDTO(employee))
+                .collect(toList());
+    }
+
 
     /****************************** API / BOOKINGS **************************************/
     //3. Create new bookings in the system
@@ -75,9 +80,8 @@ public class RatingsController {
                                                             @RequestParam String guestSurname,
                                                             @RequestParam String reservationWebsite,
                                                             @RequestParam String checkInDate,
-                                                            @RequestParam String checkOutDate)
-//                                                          @RequestParam String employee)
-{
+                                                            @RequestParam String checkOutDate,
+                                                            @RequestParam String employee) {
         Booking booking = bRepo.findByBookingNumber(bookingNumber); //gives a 409 Conflict Error
 
 // //TODO: check validation to check booking not already created working correctly
@@ -88,7 +92,8 @@ public class RatingsController {
             booking = bRepo.save(new Booking(bookingNumber, guestFirstName, guestSurname, reservationWebsite,
                     stringToDateService.convertStringToDate(checkInDate),
                     stringToDateService.convertStringToDate(checkOutDate),
-                    -1, null));//gives a 201 Created message
+                    -1, null,
+                    eRepo.findByUsername(employee)));//gives a 201 Created message
             //TODO: rating and review should be empty in this case but to intialize them the values
             //TODO: null for review & -1 for rating (so its clear it's not a real rating - as these must be 0 or more)
 

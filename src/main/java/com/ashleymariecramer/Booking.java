@@ -35,7 +35,7 @@ public class Booking {
 
     public Booking(String bookingNumber, String guestFirstName, String guestSurname,
                    String reservationWebsite, Date checkIn, Date checkOut,
-                   double rating, String reviewURL ) {
+                   double rating, String reviewURL, Employee employee ) {
         this.bookingNumber = bookingNumber;
         this.guestFirstName = guestFirstName;
         this.guestSurname = guestSurname;
@@ -44,6 +44,7 @@ public class Booking {
         this.checkOut = checkOut;
         this.rating = rating;
         this.reviewURL = reviewURL;
+        this.employee = employee;
     }
 
     // ---------------------Methods(public)----------------------------------

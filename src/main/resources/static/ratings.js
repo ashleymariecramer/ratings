@@ -2,7 +2,7 @@ $(function() {
 //Main functions:
     activateUserAccountFunctions();
     activateCreateBookingFunctions();
-
+    populateDropdownWithAllEmployeeUsernames();
 });
 
 
@@ -205,3 +205,40 @@ $(function() {
 
       return true;
   }
+
+
+//  var json = {
+//  employees: $.get("/api/all_employees_usernames")
+//  };
+//
+//  function populateDropdownWithEmployeeUsernames() {
+//      $.getJSON("/api/all_employees_usernames",function(obj) {
+//           $.each(json.cars,function(key,value)
+//           {
+//               var option = $('<option />').val(value.carID).text(value.CarType);
+//          $("#dropDownDest").append(option);
+//           });
+//
+//      });
+
+
+
+function populateDropdownWithAllEmployeeUsernames() {
+//  console.log("dropdown entered");  //TODO: remove console log later after testing more
+  $.get("/api/all_employees_usernames")
+  .done(function(data) {
+//      console.log("data");
+//      console.log(data);
+//      console.log("data");
+//      console.log(data.length);
+      for (var i = 0; i < data.length; i++) {
+        $("#employeeList").append('<option ' + 'id=' + data[i].id
+                                    + ' value=' + data[i].username
+                                    + ' >' + data[i].fullName + '</option>');
+        }
+  })
+  .fail(function( jqXHR, textStatus ) {
+//  console.log("dropdown failed");
+//    showOutput( "Failed: " + textStatus );
+  });
+}
