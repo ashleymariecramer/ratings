@@ -193,7 +193,7 @@ $(function() {
           }
       var guestSurname = document.forms["create_booking_form"]["guestSurname"].value;
           if (guestSurname == "") {
-             sweetAlert("Guest's surname must be filled out);
+             sweetAlert("Guest's surname must be filled out");
              return false;
           }
       var reservationWebsite = document.forms["create_booking_form"]["reservationWebsite"].value;
@@ -212,8 +212,7 @@ $(function() {
               return false;
           }
       var employee = document.forms["create_booking_form"]["employee"].value;
-          if (employee == "" || employee == null) {
-              alert("in employee null validation");
+          if (employee == "null") {
               sweetAlert("Add an employee as the Person Responsible for this booking");
               return false;
           }
