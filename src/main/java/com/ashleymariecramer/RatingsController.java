@@ -30,14 +30,10 @@ public class RatingsController {
     @Autowired
     private EntityConstructionService entityConstructionService;
     @Autowired
-    private StringToDateService stringToDateService;
+    private StringToLocalDateService stringToLocalDateService;
     @Autowired
     private EmployeeService employeeService;
 
-//    @RequestMapping("/")
-//    public String index() {
-//        return "Greetings from Spring Boot!";
-//    }
 
     /*********************************** API / EMPLOYEES ****************************************/
     //1. Create new employees
@@ -71,7 +67,6 @@ public class RatingsController {
                 .collect(toList());
     }
 
-
     /****************************** API / BOOKINGS **************************************/
     //3. Create new bookings in the system
     @RequestMapping(path = "/bookings", method = RequestMethod.POST)
@@ -90,27 +85,34 @@ public class RatingsController {
                     (entityConstructionService.makeMap("error", "Booking Number already in use"), HttpStatus.CONFLICT);
         } else {
             booking = bRepo.save(new Booking(bookingNumber, guestFirstName, guestSurname, reservationWebsite,
-                    stringToDateService.convertStringToDate(checkInDate),
-                    stringToDateService.convertStringToDate(checkOutDate),
+                    stringToLocalDateService.convertStringToLocalDate(checkInDate),
+                    stringToLocalDateService.convertStringToLocalDate(checkOutDate),
                     -1, null,
                     eRepo.findByUsername(employee)));//gives a 201 Created message
             //TODO: rating and review should be empty in this case but to intialize them the values
             //TODO: null for review & -1 for rating (so its clear it's not a real rating - as these must be 0 or more)
 
             return new ResponseEntity<Map<String, Object>>
-                    (entityConstructionService.makeMap("booking", booking.getId()), HttpStatus.CREATED);
+                    (entityConstructionService.makeMap("booking", booking.getCheckIn()), HttpStatus.CREATED);
         }
 
     }
     /****************************** API / ADMIN VIEW **************************************/
     //4. List of All games to be shown whether user logged in or not
-    @RequestMapping(path = "/admin_view", method = RequestMethod.GET)
+//    @RequestMapping(path = "/admin_view", method = RequestMethod.GET)
+//    public List<Object> getAllBookings() {
+//        return bRepo.findAll().stream().map(booking -> allBookingsService.makeAllBookingsDTO(booking)).collect(toList());
+//    }
+
+    /****************************** API / MANAGER VIEW **************************************/
+    //5. List of All games to be shown whether user logged in or not
+    @RequestMapping(path = "/manager_view", method = RequestMethod.GET)
     public List<Object> getAllBookings() {
         return bRepo.findAll().stream().map(booking -> allBookingsService.makeAllBookingsDTO(booking)).collect(toList());
     }
 
     /****************************** API / EMPLOYEE VIEW **************************************/
-    //5. List of All games to be shown whether user logged in or not
+    //6. List of All games to be shown whether user logged in or not
     @RequestMapping(path = "/employee_view", method = RequestMethod.GET)
     public List<Object> getAllBookingsByEmployee() {
         //TODO: here instead of findAll need find by logged in employee

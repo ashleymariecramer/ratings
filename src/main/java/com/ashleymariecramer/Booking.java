@@ -1,10 +1,13 @@
 package com.ashleymariecramer;
 
 import com.ashleymariecramer.services.EntityConstructionService;
-import com.ashleymariecramer.services.StringToDateService;
+import com.ashleymariecramer.services.StringToLocalDateService;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -21,8 +24,8 @@ public class Booking {
     private String guestFirstName;
     private String guestSurname;
     private String reservationWebsite;
-    private Date checkIn;
-    private Date checkOut;
+    private LocalDate checkIn;
+    private LocalDate checkOut;
     private double rating; // rating either from either booking.com or hostelworld.com
     private String reviewURL; //link to guest review online
     @ManyToOne(fetch = FetchType.EAGER)   //Links to employee tables by employee id
@@ -34,12 +37,16 @@ public class Booking {
     public Booking() { }
 
     public Booking(String bookingNumber, String guestFirstName, String guestSurname,
-                   String reservationWebsite, Date checkIn, Date checkOut,
+                   String reservationWebsite, LocalDate checkIn, LocalDate checkOut,
                    double rating, String reviewURL, Employee employee ) {
         this.bookingNumber = bookingNumber;
         this.guestFirstName = guestFirstName;
         this.guestSurname = guestSurname;
         this.reservationWebsite = reservationWebsite;
+//        Date dateIn = new Date();
+//        this.checkIn = checkIn.from(dateIn.toInstant());
+//        Date dateOut = new Date();
+//        this.checkOut = checkOut.from(dateOut.toInstant());
         this.checkIn = checkIn;
         this.checkOut = checkOut;
         this.rating = rating;
@@ -89,19 +96,19 @@ public class Booking {
         this.reservationWebsite = reservationWebsite;
     }
 
-    public Date getCheckIn() {
+    public LocalDate getCheckIn() {
         return checkIn;
     }
 
-    public void setCheckIn(Date checkIn) {
+    public void setCheckIn(LocalDate checkIn) {
         this.checkIn = checkIn;
     }
 
-    public Date getCheckOut() {
+    public LocalDate getCheckOut() {
         return checkOut;
     }
 
-    public void setCheckOut(Date checkOut) {
+    public void setCheckOut(LocalDate checkOut) {
         this.checkOut = checkOut;
     }
 

@@ -19,14 +19,16 @@ public class AllBookingsService {
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("bookingId", booking.getId());
         dto.put("bookingNumber", booking.getBookingNumber());
+        dto.put("guestName", booking.getGuestFirstName() + " " + booking.getGuestSurname());
         dto.put("reservationWebsite", booking.getReservationWebsite());
-        dto.put("checkIn", booking.getCheckIn());
-        dto.put("checkOut", booking.getCheckOut());
+        dto.put("checkIn", booking.getCheckIn().toString());
+//                getDayOfMonth() + "-" + booking.getCheckIn().getMonth()
+//                + "-" + booking.getCheckIn().getYear()); //TODO this needs to be converted to a visible format
+        dto.put("checkOut", booking.getCheckOut().getDayOfMonth() + "-" + booking.getCheckOut().getMonth()
+                + "-" + booking.getCheckOut().getYear());
         dto.put("rating", booking.getRating());
         dto.put("reviewURL", booking.getReviewURL());
-        dto.put("employee", booking.getEmployee());
-        dto.put("guestFirstName", booking.getGuestFirstName());
-        dto.put("guestSurname", booking.getGuestSurname());
+        dto.put("employee", booking.getEmployee().getFirstName() + " " + booking.getEmployee().getSurname());
         return dto;
     }
 

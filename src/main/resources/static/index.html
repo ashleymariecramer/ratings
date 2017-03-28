@@ -50,8 +50,8 @@
                 <input type="radio" name="reservationWebsite" value="Booking">Booking
                 <input type="radio" name="reservationWebsite" value="HostelWorld">HostelWorld
             </label>
-            <label>Check-in Date: <input type="date" name="checkInDate"></label>
-            <label>Check-out Date: <input type="date" name="checkOutDate"></label>
+            <label>Check-in Date: <input type="date" id="checkInDate" name="checkInDate"></label>
+            <label>Check-out Date: <input type="date" id="checkOutDate" name="checkOutDate"></label>
             <label>Rating: <input type="number" name="rating"></label>
             <label>Link to Review: <input type="url" name="reviewURL"></label>
             <!--TODO: later use back end to generate a list of employees to choose from (drop down)-->
@@ -68,14 +68,13 @@
             <button id="save_booking_button" type="submit" type="submit">Save Booking</button>
         </form>
 
-
         <button id="create_booking_button" type="submit" type="submit">New Booking</button>
 
         <button id="show_bookings_button" type="submit" type="submit">Show All Bookings</button>
     </div>
 
-
     <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
+    <script src="moment.js"></script>
     <script src="ratings.js"></script>
 </body>
 </html>

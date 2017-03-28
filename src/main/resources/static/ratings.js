@@ -1,15 +1,16 @@
 $(function() {
 //Main functions:
     activateUserAccountFunctions();
-    activateCreateBookingFunctions();
     populateDropdownWithAllEmployeeUsernames();
+    activateCreateBookingFunctions();
+    deactivateDatesPriorToAndIncludingCheckIn();
 });
 
 
 
 // ***  Auxiliary functions  ***  //
 
-//Groups together all the  functions related to creating, accessing user accounts
+//Groups together all the functions related to creating, accessing user accounts
   function activateUserAccountFunctions(){
     logIn();
     logOut();
@@ -17,11 +18,11 @@ $(function() {
     signUp();
   }
 
+//Groups together all the functions related to creating bookings
   function activateCreateBookingFunctions(){
     showCreateBookingForm();
     createNewBooking();
   }
-
 
   //** Login **
   function logIn() {
@@ -139,7 +140,7 @@ $(function() {
         $("#save_booking_button").click(function(evt) {
         evt.preventDefault(); //used with forms to prevent them getting submitted automatically - used with 'onsubmit="return false"' in html
         var form = evt.target.form; //this is needed later to gets the values from the form
-        if (validateCreateBookingForm() == true) {
+        if (validateBookingForm()  == true) {
                 $.post("/api/bookings",
                        { bookingNumber: form["bookingNumber"].value,
                          guestFirstName: form["guestFirstName"].value,
@@ -163,10 +164,26 @@ $(function() {
   }
 
 
-   //** Validate form for create new booking**
+  //** Validate form for create new booking**
+  //group together various validation functions
+  function validateBookingForm() {
+    if (isCheckInDateLessThanThreeDaysAgo() == false){
+        return false;
+    }
+//    isCheckInDateLessThanThreeDaysAgo();
+//isCheckOutDateAfterCheckInDate();
+//checkBookingFormFieldsNotEmpty();
+    if (isCheckOutDateAfterCheckInDate() == false){
+        return false;
+    }
+    if (checkBookingFormFieldsNotEmpty() == false){
+        return false;
+    }
+    return true;
+  }
+
   //check all fields are filled in and have correct format
-  function validateCreateBookingForm() {
-  //TODO: at present just checking fields not empty later refine this to be more accurate/field specific
+  function checkBookingFormFieldsNotEmpty() {
       var bookingNumber = document.forms["create_booking_form"]["bookingNumber"].value;
           if (bookingNumber == "") {
               alert("Booking must be filled out");
@@ -207,19 +224,38 @@ $(function() {
   }
 
 
-//  var json = {
-//  employees: $.get("/api/all_employees_usernames")
-//  };
-//
-//  function populateDropdownWithEmployeeUsernames() {
-//      $.getJSON("/api/all_employees_usernames",function(obj) {
-//           $.each(json.cars,function(key,value)
-//           {
-//               var option = $('<option />').val(value.carID).text(value.CarType);
-//          $("#dropDownDest").append(option);
-//           });
-//
-//      });
+function isCheckOutDateAfterCheckInDate(){
+    var dateIn = $('#checkInDate').val();
+    var dateOut = $('#checkOutDate').val();
+    if (moment(dateOut).isAfter(dateIn)){
+        return true;
+    }
+    alert("Check Out Date must be after Check In Date!")
+    return false;
+}
+
+function isCheckInDateLessThanThreeDaysAgo(){
+    var dateIn = $('#checkInDate').val();
+    var today = moment().format('YYYY-MM-DD'); //Gets today's date in the same format as datepicker
+    var threeDaysAgo = moment(today).subtract(3, 'days').format('YYYY-MM-DD');
+    console.log("3 days ago: " + threeDaysAgo);
+    if (moment(dateIn).isBefore(threeDaysAgo)){
+        alert("The Check In Date you have entered is more than 3 days old");
+        return false;
+    }// TODO: check in date should be no more than 3 days old eg. after 3 days ago
+    return true;
+}
+
+function deactivateDatesPriorToAndIncludingCheckIn(){
+//need to trigger this once the checkInDate has been selected
+    $('#checkInDate').change(function() {
+        var dateIn = $('#checkInDate').val();
+        var earliestPossCheckOut = moment(dateIn).add(1, 'days').format('YYYY-MM-DD');
+        $('#checkOutDate').attr('min', earliestPossCheckOut);
+    });
+}
+
+
 
 
 
@@ -227,10 +263,6 @@ function populateDropdownWithAllEmployeeUsernames() {
 //  console.log("dropdown entered");  //TODO: remove console log later after testing more
   $.get("/api/all_employees_usernames")
   .done(function(data) {
-//      console.log("data");
-//      console.log(data);
-//      console.log("data");
-//      console.log(data.length);
       for (var i = 0; i < data.length; i++) {
         $("#employeeList").append('<option ' + 'id=' + data[i].id
                                     + ' value=' + data[i].username
@@ -242,3 +274,5 @@ function populateDropdownWithAllEmployeeUsernames() {
 //    showOutput( "Failed: " + textStatus );
   });
 }
+
+//TODO: once login activated include field to show who created booking(logged in user at time) - and later for edits too.
