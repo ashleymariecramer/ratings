@@ -37,7 +37,7 @@ $(function() {
             location.reload();//Refreshes page to update with logged in user
             })
          .fail(function(jqXHR, textStatus, errorThrown) {
-              alert('Booh! Wrong credentials, try again!');
+              sweetAlert('Booh!', 'Wrong credentials, try again!', 'error');
               })
       });
   }
@@ -53,7 +53,7 @@ $(function() {
         location.reload();//Refreshes page to update with logged in user
         })
         .fail(function() {
-            alert('Booh! Something went wrong with the logout. Please try again!');
+            sweetAlert('Oops!', 'Something went wrong with the logout. Please try again!', 'error');
         })
     });
   }
@@ -83,7 +83,7 @@ $(function() {
                     location.reload();//Refreshes page to update with logged in user
                     })
                  .fail(function(jqXHR, textStatus, errorThrown) {
-                      alert("Oops, seems there was a problem! Please try again");
+                      sweetAlert("Oops", "Seems there was a problem! Please try again", "error");
                       })
         }
         });
@@ -94,29 +94,29 @@ $(function() {
   function validateSignupForm() {
       var name = document.forms["signup_form"]["firstName"].value;
           if (name == "") {
-              alert("First Name must be filled out");
+              sweetAlert("First Name must be filled out");
               return false;
           }
       var surname = document.forms["signup_form"]["surname"].value;
           if (name == "") {
-              alert("Surname must be filled out");
+              sweetAlert("Surname must be filled out");
               return false;
           }
       var username = document.forms["signup_form"]["username"].value;
           if (username == "") {
-              alert("Username must be filled out");
+              sweetAlert("Username must be filled out");
               return false;
           }
       var pass = document.forms["signup_form"]["password"].value;
           if (pass == "") {
-              alert("Password must be filled out");
+              sweetAlert("Password must be filled out");
               return false;
           }
 //       TODO: if you want to add an email too
 //      var atpos = email.indexOf("@");
 //      var dotpos = email.lastIndexOf(".");
 //          if (atpos<1 || dotpos<atpos+2 || dotpos+2>=email.length) {
-//              alert("Not a valid e-mail address");
+//              sweetAlert("Not a valid e-mail address");
 //              return false;
 //          }
       return true;
@@ -157,7 +157,7 @@ $(function() {
                     location.reload();//Refreshes page to update with logged in user
                     })
                  .fail(function(jqXHR, textStatus, errorThrown) {
-                      alert("Oops, seems there was a problem! Please try again");
+                      sweetAlert("Oops", "Seems there was a problem! Please try again", "error");
                       })
         }
         });
@@ -167,16 +167,13 @@ $(function() {
   //** Validate form for create new booking**
   //group together various validation functions
   function validateBookingForm() {
+    if (checkBookingFormFieldsNotEmpty() == false){
+          return false;
+    }
     if (isCheckInDateLessThanThreeDaysAgo() == false){
         return false;
     }
-//    isCheckInDateLessThanThreeDaysAgo();
-//isCheckOutDateAfterCheckInDate();
-//checkBookingFormFieldsNotEmpty();
     if (isCheckOutDateAfterCheckInDate() == false){
-        return false;
-    }
-    if (checkBookingFormFieldsNotEmpty() == false){
         return false;
     }
     return true;
@@ -186,37 +183,38 @@ $(function() {
   function checkBookingFormFieldsNotEmpty() {
       var bookingNumber = document.forms["create_booking_form"]["bookingNumber"].value;
           if (bookingNumber == "") {
-              alert("Booking must be filled out");
+              sweetAlert("Booking number must be filled out");
               return false;
           }
       var guestFirstName = document.forms["create_booking_form"]["guestFirstName"].value;
           if (guestFirstName == "") {
-              alert("Guest's first name must be filled out for this booking");
+              sweetAlert("Guest's first name must be filled out");
               return false;
           }
       var guestSurname = document.forms["create_booking_form"]["guestSurname"].value;
           if (guestSurname == "") {
-             alert("Guest's surname must be filled out for this booking");
+             sweetAlert("Guest's surname must be filled out);
              return false;
           }
       var reservationWebsite = document.forms["create_booking_form"]["reservationWebsite"].value;
           if (reservationWebsite == "") {
-              alert("Reservation Website must be filled out");
+              sweetAlert("Reservation Website must be filled out");
               return false;
           }
       var checkInDate = document.forms["create_booking_form"]["checkInDate"].value;
           if (checkInDate == "") {
-              alert("Check-in Date must be filled out");
+              sweetAlert("Check-in Date must be filled out");
               return false;
           }
       var checkOutDate = document.forms["create_booking_form"]["checkOutDate"].value;
           if (checkOutDate == "") {
-              alert("Check-out Date must be filled out");
+              sweetAlert("Check-out Date must be filled out");
               return false;
           }
       var employee = document.forms["create_booking_form"]["employee"].value;
-          if (reservationWebsite == "") {
-              alert("Add an employee as the Person Responsible for this booking");
+          if (employee == "" || employee == null) {
+              alert("in employee null validation");
+              sweetAlert("Add an employee as the Person Responsible for this booking");
               return false;
           }
 
@@ -224,26 +222,17 @@ $(function() {
   }
 
 
-function isCheckOutDateAfterCheckInDate(){
-    var dateIn = $('#checkInDate').val();
-    var dateOut = $('#checkOutDate').val();
-    if (moment(dateOut).isAfter(dateIn)){
-        return true;
-    }
-    alert("Check Out Date must be after Check In Date!")
-    return false;
-}
-
-function isCheckInDateLessThanThreeDaysAgo(){
-    var dateIn = $('#checkInDate').val();
-    var today = moment().format('YYYY-MM-DD'); //Gets today's date in the same format as datepicker
-    var threeDaysAgo = moment(today).subtract(3, 'days').format('YYYY-MM-DD');
-    console.log("3 days ago: " + threeDaysAgo);
-    if (moment(dateIn).isBefore(threeDaysAgo)){
-        alert("The Check In Date you have entered is more than 3 days old");
-        return false;
-    }// TODO: check in date should be no more than 3 days old eg. after 3 days ago
-    return true;
+function populateDropdownWithAllEmployeeUsernames() {
+  $.get("/api/all_employees_usernames")
+  .done(function(data) {
+      for (var i = 0; i < data.length; i++) {
+        $("#employeeList").append('<option ' + 'id=' + data[i].id
+                                    + ' value=' + data[i].username
+                                    + ' >' + data[i].fullName + '</option>');
+        }
+  })
+  .fail(function( jqXHR, textStatus ) {
+  });
 }
 
 function deactivateDatesPriorToAndIncludingCheckIn(){
@@ -255,24 +244,30 @@ function deactivateDatesPriorToAndIncludingCheckIn(){
     });
 }
 
-
-
-
-
-function populateDropdownWithAllEmployeeUsernames() {
-//  console.log("dropdown entered");  //TODO: remove console log later after testing more
-  $.get("/api/all_employees_usernames")
-  .done(function(data) {
-      for (var i = 0; i < data.length; i++) {
-        $("#employeeList").append('<option ' + 'id=' + data[i].id
-                                    + ' value=' + data[i].username
-                                    + ' >' + data[i].fullName + '</option>');
-        }
-  })
-  .fail(function( jqXHR, textStatus ) {
-//  console.log("dropdown failed");
-//    showOutput( "Failed: " + textStatus );
-  });
+function isCheckInDateLessThanThreeDaysAgo(){
+    var dateIn = $('#checkInDate').val();
+    var today = moment().format('YYYY-MM-DD'); //Gets today's date in the same format as datepicker
+    var threeDaysAgo = moment(today).subtract(3, 'days').format('YYYY-MM-DD');
+    console.log("3 days ago: " + threeDaysAgo);
+    if (moment(dateIn).isBefore(threeDaysAgo)){
+        sweetAlert("The Check In Date you have entered is more than 3 days old");
+        return false;
+    }// TODO: check in date should be no more than 3 days old eg. after 3 days ago
+    return true;
 }
+
+function isCheckOutDateAfterCheckInDate(){
+    var dateIn = $('#checkInDate').val();
+    var dateOut = $('#checkOutDate').val();
+    if (moment(dateOut).isAfter(dateIn)){
+        return true;
+    }
+    sweetAlert("Check Out Date must be after Check In Date!")
+    return false;
+}
+
+
+
+
 
 //TODO: once login activated include field to show who created booking(logged in user at time) - and later for edits too.
