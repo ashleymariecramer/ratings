@@ -1,10 +1,8 @@
 package com.ashleymariecramer;
 
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import javax.validation.constraints.Pattern;
 import java.util.Set;
 
 @Entity
@@ -27,10 +25,11 @@ public class Employee {
     private String username;
     @NotEmpty (message = "Please enter a password")
     private String password;
-    //TODO: map booking associated with user
     @OneToMany(mappedBy="employee", fetch= FetchType.EAGER)
-    private Set<Booking> booking;
-
+    private Set<Booking> Booking;
+    @ManyToOne(fetch = FetchType.EAGER)   //Links to employee tables by employee id
+    @JoinColumn(name="accommodation_id")
+    private Accommodation accommodation;
 
     // ---------------------Constructors(public)----------------------------------
     public Employee() { }
@@ -43,6 +42,10 @@ public class Employee {
     }
 
     // ---------------------Methods(public)----------------------------------
+
+    public long getId() {
+        return id;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -76,10 +79,13 @@ public class Employee {
         this.password = password;
     }
 
-    public long getId() {
-        return id;
+    public Set<Booking> getBooking() {
+        return Booking;
     }
 
+    public Accommodation getAccommodation() {
+        return accommodation;
+    }
 }
 
 

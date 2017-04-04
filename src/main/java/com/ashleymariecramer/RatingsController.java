@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +23,8 @@ public class RatingsController {
     @Autowired
     private BookingRepository bRepo;
     @Autowired
+    private AccommodationRepository aRepo;
+    @Autowired
     private AllBookingsService allBookingsService;
     @Autowired
     private AllBookingsAssignedToEmployeeService allBookingsAssignedToEmployeeService;
@@ -33,14 +34,15 @@ public class RatingsController {
     private StringToLocalDateService stringToLocalDateService;
     @Autowired
     private EmployeeService employeeService;
-
+    @Autowired
+    private AccommodationService accommodationService;
 
     /*********************************** API / EMPLOYEES ****************************************/
     //1. Create new employees
     //Because some of the conditions have to return a Map ResponseEntity<Map<String,Object>> then all of them have to
     //@RequestParam is necessary before each parameter
     @RequestMapping(path = "/employees", method = RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> createPlayer(@RequestParam String firstName,
+    public ResponseEntity<Map<String, Object>> createEmployee(@RequestParam String firstName,
                                                             @RequestParam String surname,
                                                             @RequestParam String username,
                                                             @RequestParam String password) {
@@ -59,8 +61,17 @@ public class RatingsController {
         }
     }
 
+    /****************************** API / GET ALL ACCOMMODATION NAMES **************************************/
+    //2. Return a list of all accomodation saved in system
+    @RequestMapping(path = "/all_accommodation", method = RequestMethod.GET)
+    public List<Object> getAllAccomodation() {
+        return aRepo.findAll().stream().map(accommodation -> accommodationService.makeAccommodationListDTO(accommodation))
+                .collect(toList());
+    }
+
     /****************************** API / GET ALL EMPLOYEES USERNAMES **************************************/
-    //2. Return a list of all employees saved in system
+    //3. Return a list of all employees saved in system
+    //TODO: Will need to separate list of employee names bcn & svl
     @RequestMapping(path = "/all_employees_usernames", method = RequestMethod.GET)
     public List<Object> getAllEmployees() {
         return eRepo.findAll().stream().map(employee -> employeeService.makeUsernameListDTO(employee))
@@ -68,51 +79,56 @@ public class RatingsController {
     }
 
     /****************************** API / BOOKINGS **************************************/
-    //3. Create new bookings in the system
+    //4. Create new bookings in the system
     @RequestMapping(path = "/bookings", method = RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> createPlayer(@RequestParam String bookingNumber,
+    public ResponseEntity<Map<String, Object>> createBooking(@RequestParam String bookingNumber,
                                                             @RequestParam String guestFirstName,
                                                             @RequestParam String guestSurname,
+                                                            @RequestParam String accommodation,
                                                             @RequestParam String reservationWebsite,
                                                             @RequestParam String checkInDate,
                                                             @RequestParam String checkOutDate,
                                                             @RequestParam String employee) {
         Booking booking = bRepo.findByBookingNumber(bookingNumber); //gives a 409 Conflict Error
 
-// //TODO: check validation to check booking not already created working correctly
+// //TODO: check validation to check barcelonaBooking not already created working correctly
         if (booking != null) {
             return new ResponseEntity<Map<String, Object>>
                     (entityConstructionService.makeMap("error", "Booking Number already in use"), HttpStatus.CONFLICT);
         } else {
-            booking = bRepo.save(new Booking(bookingNumber, guestFirstName, guestSurname, reservationWebsite,
+            booking = bRepo.save(new Booking(bookingNumber, guestFirstName, guestSurname,
+                    aRepo.findById(Long.parseLong(accommodation)), reservationWebsite,
                     stringToLocalDateService.convertStringToLocalDate(checkInDate),
                     stringToLocalDateService.convertStringToLocalDate(checkOutDate),
                     -1, null,
                     eRepo.findByUsername(employee)));//gives a 201 Created message
-            //TODO: rating and review should be empty in this case but to intialize them the values
+            //TODO: rating and review should be empty in this case but to initialise them the values
             //TODO: null for review & -1 for rating (so its clear it's not a real rating - as these must be 0 or more)
 
             return new ResponseEntity<Map<String, Object>>
-                    (entityConstructionService.makeMap("booking", booking.getCheckIn()), HttpStatus.CREATED);
-        }
 
+                    (entityConstructionService.makeMap("Booking", booking.getCheckIn()), HttpStatus.CREATED);
+        }
     }
+
     /****************************** API / ADMIN VIEW **************************************/
-    //4. List of All games to be shown whether user logged in or not
+    //5. List of All games to be shown whether user logged in or not
 //    @RequestMapping(path = "/admin_view", method = RequestMethod.GET)
 //    public List<Object> getAllBookings() {
 //        return bRepo.findAll().stream().map(booking -> allBookingsService.makeAllBookingsDTO(booking)).collect(toList());
 //    }
 
-    /****************************** API / MANAGER VIEW **************************************/
-    //5. List of All games to be shown whether user logged in or not
+    /****************************** API / MANAGER VIEWs **************************************/
+    //6. List of All games to be shown whether user logged in or not
     @RequestMapping(path = "/manager_view", method = RequestMethod.GET)
     public List<Object> getAllBookings() {
+        //TODO: generate repo name from last 3 digits of API url + Repo
         return bRepo.findAll().stream().map(booking -> allBookingsService.makeAllBookingsDTO(booking)).collect(toList());
     }
 
+
     /****************************** API / EMPLOYEE VIEW **************************************/
-    //6. List of All games to be shown whether user logged in or not
+    //7. List of All games to be shown whether user logged in or not
     @RequestMapping(path = "/employee_view", method = RequestMethod.GET)
     public List<Object> getAllBookingsByEmployee() {
         //TODO: here instead of findAll need find by logged in employee

@@ -2,6 +2,7 @@ package com.ashleymariecramer.services;
 
 import com.ashleymariecramer.Booking;
 import com.ashleymariecramer.BookingRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +21,11 @@ public class AllBookingsService {
         dto.put("bookingId", booking.getId());
         dto.put("bookingNumber", booking.getBookingNumber());
         dto.put("guestName", booking.getGuestFirstName() + " " + booking.getGuestSurname());
+        dto.put("accommodation", booking.getAccommodation().getName());
         dto.put("reservationWebsite", booking.getReservationWebsite());
         dto.put("checkIn", booking.getCheckIn().toString());
-//                getDayOfMonth() + "-" + booking.getCheckIn().getMonth()
-//                + "-" + booking.getCheckIn().getYear()); //TODO this needs to be converted to a visible format
+//                getDayOfMonth() + "-" + barcelonaBooking.getCheckIn().getMonth()
+//                + "-" + barcelonaBooking.getCheckIn().getYear()); //TODO this needs to be converted to a visible format
         dto.put("checkOut", booking.getCheckOut().getDayOfMonth() + "-" + booking.getCheckOut().getMonth()
                 + "-" + booking.getCheckOut().getYear());
         dto.put("rating", booking.getRating());

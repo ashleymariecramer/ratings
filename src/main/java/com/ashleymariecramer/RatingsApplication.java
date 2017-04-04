@@ -23,6 +23,7 @@ public class RatingsApplication {
 	public CommandLineRunner commandLineRunner(ApplicationContext ctx,
 											   EmployeeRepository employeeRepo,
 											   BookingRepository bookingRepo,
+											   AccommodationRepository accommodationRepo,
 											   StringToLocalDateService stringToLocalDateService) {
 
 		return args -> {
@@ -34,25 +35,27 @@ public class RatingsApplication {
 					("Noey", "Boo", "Noeys", "111"));
 			employeeRepo.save(new Employee
 					("Marky", "Mark", "Markitus", "111"));
+			accommodationRepo.save(new Accommodation("Black Swan Barcelona", "Barcelona"));
+			accommodationRepo.save(new Accommodation("Black Swan Sevilla", "Sevilla"));
 
 //TODO: there is some problem with creating bookings this way which causes problems calling api/manager_view
 //			// create a few bookings
-//			bookingRepo.save(new Booking("FTD123", "Minnie", "Mouse", "Booking",
+//			bookingRepo.save(new BarcelonaBooking("FTD123", "Minnie", "Mouse", "BarcelonaBooking",
 //					stringToLocalDateService.convertStringToLocalDate("2017-01-01"),
 //					stringToLocalDateService.convertStringToLocalDate("2017-01-03"),
 //					-1.0, null, employeeRepo.findByUsername("Nat")));
 //
-//			bookingRepo.save(new Booking("GH&354", "Mickey", "Mouse", "HostelWorld",
+//			bookingRepo.save(new BarcelonaBooking("GH&354", "Mickey", "Mouse", "HostelWorld",
 //					stringToLocalDateService.convertStringToLocalDate("2017-02-13"),
 //					stringToLocalDateService.convertStringToLocalDate("2017-02-53"),
 //					-1.0, null, employeeRepo.findByUsername("Noeys")));
 //
-//			bookingRepo.save(new Booking("DGS163", "Donald", "Duck", "HostelWorld",
+//			bookingRepo.save(new BarcelonaBooking("DGS163", "Donald", "Duck", "HostelWorld",
 //					stringToLocalDateService.convertStringToLocalDate("2017-03-01"),
 //					stringToLocalDateService.convertStringToLocalDate("2017-03-03"),
 //					-1.0, null, employeeRepo.findByUsername("Markitus")));
 //
-//			bookingRepo.save(new Booking("EFG298", "Daisy", "Duck", "Booking",
+//			bookingRepo.save(new BarcelonaBooking("EFG298", "Daisy", "Duck", "BarcelonaBooking",
 //					stringToLocalDateService.convertStringToLocalDate("2017-03-20"),
 //					stringToLocalDateService.convertStringToLocalDate("2017-03-27"),
 //					-1.0, null, employeeRepo.findByUsername("Nat")));

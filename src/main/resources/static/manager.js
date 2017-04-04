@@ -8,18 +8,21 @@ $(function() {
 
 //ajax call to the api to get the JSON data - if successful it uses data to draw a list of bookings if not it returns an error
 function loadAllBookings() {
- $.getJSON("/api/manager_view")
+    var bookingsByCity = "/api/manager_view/bcn";
+    var table = "#managerViewTableBcn";
+//TODO: need a variable to change bcn to svq for sevilla
+ $.getJSON(bookingsByCity) //TODO : need to get this to get a different urls for bcn and svq
  .done(function(data) {
-     bookingsMap(data);
+     bookingsMap(data, table);
  })
  .fail(function( jqXHR, textStatus ) {
-     $("#managerViewTable").text("Failed: " + textStatus);
+     $(table).text("Failed: " + textStatus);
  });
 }
 
 
 //get data from JSON and list of all games with game id, creation date, players emails
-function bookingsMap(data) {
+function bookingsMap(data, table) {
  data.map(function(bookingData) {
      var booking = {};
      booking.number = bookingData.bookingNumber;
@@ -30,7 +33,8 @@ function bookingsMap(data) {
      booking.rating = bookingData.rating;
      booking.url = bookingData.reviewURL;
      booking.employee = bookingData.employee;
-     $("#managerViewTable").append("<tr>" + "<td>" + booking.number + "</td>" +
+     //TODO: pass tabel id through variable 'table' if it should load in bcn or svq table
+     $(table).append("<tr>" + "<td>" + booking.number + "</td>" +
                                    "<td>" + booking.guest + "</td>" +
                                    "<td>" + booking.web + "</td>" +
                                    "<td>" + booking.checkIn + "</td>" +

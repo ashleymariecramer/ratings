@@ -1,6 +1,7 @@
 $(function() {
 //Main functions:
     activateUserAccountFunctions();
+    populateDropdownWithAllAccommodationNames();
     populateDropdownWithAllEmployeeUsernames();
     activateCreateBookingFunctions();
     deactivateDatesPriorToAndIncludingCheckIn();
@@ -145,13 +146,13 @@ $(function() {
                        { bookingNumber: form["bookingNumber"].value,
                          guestFirstName: form["guestFirstName"].value,
                          guestSurname: form["guestSurname"].value,
+                         accommodation: form["accommodation"].value,
                          reservationWebsite: form["reservationWebsite"].value,
                          checkInDate: form["checkInDate"].value,
                          checkOutDate: form["checkOutDate"].value,
                          rating: form["rating"].value,
                          reviewURL: form["reviewURL"].value,
                          employee: form["employee"].value  })
-
                  .done(function() {
                     console.log("new booking created!"); //to check login has worked
                     location.reload();//Refreshes page to update with logged in user
@@ -196,6 +197,11 @@ $(function() {
              sweetAlert("Guest's surname must be filled out");
              return false;
           }
+      var accommodation = document.forms["create_booking_form"]["accommodation"].value;
+          if (accommodation == "null") {
+                sweetAlert("Add a accommodation for this booking");
+                return false;
+          }
       var reservationWebsite = document.forms["create_booking_form"]["reservationWebsite"].value;
           if (reservationWebsite == "") {
               sweetAlert("Reservation Website must be filled out");
@@ -220,6 +226,20 @@ $(function() {
       return true;
   }
 
+function populateDropdownWithAllAccommodationNames() {
+  $.get("/api/all_accommodation")
+  .done(function(data) {
+      for (var i = 0; i < data.length; i++) {
+        $("#accommodationList").append('<option ' + 'id=' + data[i].id
+                                    + ' value=' + data[i].id
+                                    + ' >' + data[i].name+ '</option>');
+        }
+  })
+  .fail(function( jqXHR, textStatus ) {
+  });
+}
+
+
 
 function populateDropdownWithAllEmployeeUsernames() {
   $.get("/api/all_employees_usernames")
@@ -233,6 +253,8 @@ function populateDropdownWithAllEmployeeUsernames() {
   .fail(function( jqXHR, textStatus ) {
   });
 }
+
+
 
 function deactivateDatesPriorToAndIncludingCheckIn(){
 //need to trigger this once the checkInDate has been selected
@@ -264,8 +286,6 @@ function isCheckOutDateAfterCheckInDate(){
     sweetAlert("Check Out Date must be after Check In Date!")
     return false;
 }
-
-
 
 
 

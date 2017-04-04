@@ -1,18 +1,10 @@
 package com.ashleymariecramer;
 
-import com.ashleymariecramer.services.EntityConstructionService;
-import com.ashleymariecramer.services.StringToLocalDateService;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.springframework.beans.factory.annotation.Autowired;
+
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 
-/**
- * Created by ashleymariecramer on 08/03/2017.
- */
 @Entity
 public class Booking {
 
@@ -31,17 +23,22 @@ public class Booking {
     @ManyToOne(fetch = FetchType.EAGER)   //Links to employee tables by employee id
     @JoinColumn(name="employee_id")
     private Employee employee;
+    @ManyToOne(fetch = FetchType.EAGER)   //Links to employee tables by employee id
+    @JoinColumn(name="accommodation_id")
+    private Accommodation accommodation;
+
 
 
     // ---------------------Constructors(public)----------------------------------
     public Booking() { }
 
     public Booking(String bookingNumber, String guestFirstName, String guestSurname,
-                   String reservationWebsite, LocalDate checkIn, LocalDate checkOut,
+                   Accommodation accommodation, String reservationWebsite, LocalDate checkIn, LocalDate checkOut,
                    double rating, String reviewURL, Employee employee ) {
         this.bookingNumber = bookingNumber;
         this.guestFirstName = guestFirstName;
         this.guestSurname = guestSurname;
+        this.accommodation = accommodation;
         this.reservationWebsite = reservationWebsite;
 //        Date dateIn = new Date();
 //        this.checkIn = checkIn.from(dateIn.toInstant());
@@ -135,6 +132,15 @@ public class Booking {
     public void setEmployee(Employee employee) {
         this.employee = employee;
     }
+
+    public Accommodation getAccommodation() {
+        return accommodation;
+    }
+
+    public void setAccommodation(Accommodation accommodation) {
+        this.accommodation = accommodation;
+    }
+
 
 
 }
