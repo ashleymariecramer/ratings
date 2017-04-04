@@ -30,11 +30,11 @@ public class RatingsApplication {
 
 			// save a couple of employees
 			employeeRepo.save(new Employee
-					("Nattie", "Munchkins", "Nat", "111"));
+					("Nattie", "Munchkins", "Nat", "111", accommodationRepo.findById(1L)));
 			employeeRepo.save(new Employee
-					("Noey", "Boo", "Noeys", "111"));
+					("Noey", "Boo", "Noeys", "111", accommodationRepo.findById(2L)));
 			employeeRepo.save(new Employee
-					("Marky", "Mark", "Markitus", "111"));
+					("Marky", "Mark", "Markitus", "111", accommodationRepo.findById(1L)));
 			accommodationRepo.save(new Accommodation("Black Swan Barcelona", "Barcelona"));
 			accommodationRepo.save(new Accommodation("Black Swan Sevilla", "Sevilla"));
 

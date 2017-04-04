@@ -78,7 +78,8 @@ $(function() {
                        { firstName: form["firstName"].value,
                          surname: form["surname"].value,
                          username: form["username"].value,
-                         password: form["password"].value })
+                         password: form["password"].value,
+                         accommodation: form["accommodation"].value })
                  .done(function() {
                     console.log("new account created!"); //to check login has worked
                     location.reload();//Refreshes page to update with logged in user
@@ -230,9 +231,9 @@ function populateDropdownWithAllAccommodationNames() {
   $.get("/api/all_accommodation")
   .done(function(data) {
       for (var i = 0; i < data.length; i++) {
-        $("#accommodationList").append('<option ' + 'id=' + data[i].id
-                                    + ' value=' + data[i].id
-                                    + ' >' + data[i].name+ '</option>');
+        var accommodationList = '<option value=' + data[i].id + ' >' + data[i].name + '</option>'
+        $("#accommodationList").append(accommodationList);
+        $("#workplaceList").append(accommodationList);
         }
   })
   .fail(function( jqXHR, textStatus ) {
@@ -245,9 +246,8 @@ function populateDropdownWithAllEmployeeUsernames() {
   $.get("/api/all_employees_usernames")
   .done(function(data) {
       for (var i = 0; i < data.length; i++) {
-        $("#employeeList").append('<option ' + 'id=' + data[i].id
-                                    + ' value=' + data[i].username
-                                    + ' >' + data[i].fullName + '</option>');
+        $("#employeeList").append('<option value=' + data[i].username + ' >' +
+                                   data[i].fullName + '</option>');
         }
   })
   .fail(function( jqXHR, textStatus ) {

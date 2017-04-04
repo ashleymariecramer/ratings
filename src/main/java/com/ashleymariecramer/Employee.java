@@ -34,11 +34,12 @@ public class Employee {
     // ---------------------Constructors(public)----------------------------------
     public Employee() { }
 
-    public Employee(String firstName, String surname, String username, String password) {
+    public Employee(String firstName, String surname, String username, String password, Accommodation accommodation) {
         this.firstName = firstName;
         this.surname = surname;
         this.username = username;
         this.password = password;
+        this.accommodation = accommodation;
     }
 
     // ---------------------Methods(public)----------------------------------
@@ -81,6 +82,10 @@ public class Employee {
 
     public Set<Booking> getBooking() {
         return Booking;
+    }
+
+    public void setAccommodation(Accommodation accommodation) {
+        this.accommodation = accommodation;
     }
 
     public Accommodation getAccommodation() {

@@ -45,7 +45,8 @@ public class RatingsController {
     public ResponseEntity<Map<String, Object>> createEmployee(@RequestParam String firstName,
                                                             @RequestParam String surname,
                                                             @RequestParam String username,
-                                                            @RequestParam String password) {
+                                                            @RequestParam String password,
+                                                            @RequestParam String accommodation) {
         Employee employee = eRepo.findByUsername(username); //gives a 409 Conflict Error
 
 // //TODO: check validation to check employee not already created working correctly
@@ -55,7 +56,8 @@ public class RatingsController {
             return new ResponseEntity<Map<String, Object>>
                     (entityConstructionService.makeMap("error", "Username(email) already in use"), HttpStatus.CONFLICT);
         } else {
-            employee = eRepo.save(new Employee(firstName, surname, username, password)); //gives a 201 Created message
+            employee = eRepo.save(new Employee(firstName, surname, username, password,
+                    aRepo.findById(Long.parseLong(accommodation)))); //gives a 201 Created message
             return new ResponseEntity<Map<String, Object>>
                     (entityConstructionService.makeMap("employee", employee.getUsername()), HttpStatus.CREATED);
         }
