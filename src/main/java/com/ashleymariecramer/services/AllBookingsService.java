@@ -21,7 +21,7 @@ public class AllBookingsService {
         dto.put("bookingId", booking.getId());
         dto.put("bookingNumber", booking.getBookingNumber());
         dto.put("guestName", booking.getGuestFirstName() + " " + booking.getGuestSurname());
-        dto.put("accommodation", booking.getAccommodation().getName());
+        dto.put("accommodation", booking.getAccommodationName());
         dto.put("reservationWebsite", booking.getReservationWebsite());
         dto.put("checkIn", booking.getCheckIn().toString());
 //                getDayOfMonth() + "-" + barcelonaBooking.getCheckIn().getMonth()

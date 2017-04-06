@@ -25,21 +25,23 @@ public class Employee {
     private String username;
     @NotEmpty (message = "Please enter a password")
     private String password;
+    @NotEmpty (message = "Please enter accommodation name")
+    private String accommodationName;
     @OneToMany(mappedBy="employee", fetch= FetchType.EAGER)
-    private Set<Booking> Booking;
-    @ManyToOne(fetch = FetchType.EAGER)   //Links to employee tables by employee id
-    @JoinColumn(name="accommodation_id")
-    private Accommodation accommodation;
+    private Set<Booking> bookings;
+//    @ManyToOne(fetch = FetchType.EAGER)   //Links to accommodation tables by accommodation id
+//    @JoinColumn(name="accommodation_id")
+//    private Accommodation accommodation;
 
     // ---------------------Constructors(public)----------------------------------
     public Employee() { }
 
-    public Employee(String firstName, String surname, String username, String password, Accommodation accommodation) {
+    public Employee(String firstName, String surname, String username, String password, String accommodationName) {
         this.firstName = firstName;
         this.surname = surname;
         this.username = username;
         this.password = password;
-        this.accommodation = accommodation;
+        this.accommodationName = accommodationName;
     }
 
     // ---------------------Methods(public)----------------------------------
@@ -81,15 +83,15 @@ public class Employee {
     }
 
     public Set<Booking> getBooking() {
-        return Booking;
+        return bookings;
     }
 
-    public void setAccommodation(Accommodation accommodation) {
-        this.accommodation = accommodation;
+    public void SetAccommodationName(String accommodation) {
+        this.accommodationName = accommodationName;
     }
 
-    public Accommodation getAccommodation() {
-        return accommodation;
+    public String getAccommodationName() {
+        return accommodationName;
     }
 }
 

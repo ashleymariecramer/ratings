@@ -20,7 +20,8 @@ public class EmployeeService {
         dto.put("username", employee.getUsername());
         dto.put("id", employee.getId());
         dto.put("fullName", employee.getFirstName() + " " + employee.getSurname());
-//        dto.put("employeeData", eRepo.findByUsername(employee.getUsername())); //
+        dto.put("workplace", employee.getAccommodationName());
+//        dto.put("accommodation Id", employee.getAccommodation().getId());
 // This returns all employee data by username
         return dto;
     }

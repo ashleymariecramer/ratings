@@ -23,20 +23,25 @@ public class RatingsApplication {
 	public CommandLineRunner commandLineRunner(ApplicationContext ctx,
 											   EmployeeRepository employeeRepo,
 											   BookingRepository bookingRepo,
-											   AccommodationRepository accommodationRepo,
+//											   AccommodationRepository accommodationRepo,
 											   StringToLocalDateService stringToLocalDateService) {
 
 		return args -> {
 
 			// save a couple of employees
 			employeeRepo.save(new Employee
-					("Nattie", "Munchkins", "Nat", "111", accommodationRepo.findById(1L)));
+					("Nattie", "Munchkins", "Nat", "111", "blackSwanBCN"));
 			employeeRepo.save(new Employee
-					("Noey", "Boo", "Noeys", "111", accommodationRepo.findById(2L)));
+					("Noey", "Boo", "Noeys", "111", "blackSwanSVQ"));
 			employeeRepo.save(new Employee
-					("Marky", "Mark", "Markitus", "111", accommodationRepo.findById(1L)));
-			accommodationRepo.save(new Accommodation("Black Swan Barcelona", "Barcelona"));
-			accommodationRepo.save(new Accommodation("Black Swan Sevilla", "Sevilla"));
+					("Marky", "Mark", "Markitus", "111", "blackSwanBCN"));
+			employeeRepo.save(new Employee
+					("Nacho", "Honey", "Natx", "111", "blackSwanBCN"));
+			employeeRepo.save(new Employee
+					("Ashley", "Marie", "AMC", "111", "blackSwanSVQ"));
+
+//			accommodationRepo.save(new Accommodation("Black Swan Barcelona", "Barcelona"));
+//			accommodationRepo.save(new Accommodation("Black Swan Sevilla", "Sevilla"));
 
 //TODO: there is some problem with creating bookings this way which causes problems calling api/manager_view
 //			// create a few bookings

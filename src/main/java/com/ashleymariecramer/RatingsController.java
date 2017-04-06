@@ -4,10 +4,7 @@ import com.ashleymariecramer.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -22,8 +19,8 @@ public class RatingsController {
     private EmployeeRepository eRepo;
     @Autowired
     private BookingRepository bRepo;
-    @Autowired
-    private AccommodationRepository aRepo;
+//    @Autowired
+//    private AccommodationRepository aRepo;
     @Autowired
     private AllBookingsService allBookingsService;
     @Autowired
@@ -34,8 +31,8 @@ public class RatingsController {
     private StringToLocalDateService stringToLocalDateService;
     @Autowired
     private EmployeeService employeeService;
-    @Autowired
-    private AccommodationService accommodationService;
+//    @Autowired
+//    private AccommodationService accommodationService;
 
     /*********************************** API / EMPLOYEES ****************************************/
     //1. Create new employees
@@ -46,7 +43,7 @@ public class RatingsController {
                                                             @RequestParam String surname,
                                                             @RequestParam String username,
                                                             @RequestParam String password,
-                                                            @RequestParam String accommodation) {
+                                                            @RequestParam String accommodationName) {
         Employee employee = eRepo.findByUsername(username); //gives a 409 Conflict Error
 
 // //TODO: check validation to check employee not already created working correctly
@@ -57,26 +54,35 @@ public class RatingsController {
                     (entityConstructionService.makeMap("error", "Username(email) already in use"), HttpStatus.CONFLICT);
         } else {
             employee = eRepo.save(new Employee(firstName, surname, username, password,
-                    aRepo.findById(Long.parseLong(accommodation)))); //gives a 201 Created message
+                    accommodationName)); //gives a 201 Created message
             return new ResponseEntity<Map<String, Object>>
                     (entityConstructionService.makeMap("employee", employee.getUsername()), HttpStatus.CREATED);
         }
     }
 
     /****************************** API / GET ALL ACCOMMODATION NAMES **************************************/
-    //2. Return a list of all accomodation saved in system
-    @RequestMapping(path = "/all_accommodation", method = RequestMethod.GET)
-    public List<Object> getAllAccomodation() {
-        return aRepo.findAll().stream().map(accommodation -> accommodationService.makeAccommodationListDTO(accommodation))
+//    //2. Return a list of all accommodation saved in system
+//    @RequestMapping(path = "/all_accommodation", method = RequestMethod.GET)
+//    public List<Object> getAllAccomodation() {
+//        return aRepo.findAll().stream().map(accommodation -> accommodationService.makeAccommodationListDTO(accommodation))
+//                .collect(toList());
+//    }
+
+    /****************************** API / GET ALL EMPLOYEES USERNAMES **************************************/
+    //3s. Return a list of all employees saved in system
+    @RequestMapping(path = "/all_employees_usernames", method = RequestMethod.GET)
+    public List<Object> getAllEmployees() {
+        return eRepo.findAll().stream()
+                .map(employee -> employeeService.makeUsernameListDTO(employee))
                 .collect(toList());
     }
 
-    /****************************** API / GET ALL EMPLOYEES USERNAMES **************************************/
-    //3. Return a list of all employees saved in system
-    //TODO: Will need to separate list of employee names bcn & svl
-    @RequestMapping(path = "/all_employees_usernames", method = RequestMethod.GET)
-    public List<Object> getAllEmployees() {
-        return eRepo.findAll().stream().map(employee -> employeeService.makeUsernameListDTO(employee))
+    //3b. Return a list of employees by accommodation name
+    @RequestMapping("/all_employees_usernames/{accomName}")
+    public List <Object> findEmployeesByAccomodationName(@PathVariable String accomName) {
+        return eRepo.findByAccommodationName(accomName)
+                .stream()
+                .map(employee -> employeeService.makeUsernameListDTO(employee))
                 .collect(toList());
     }
 
@@ -86,7 +92,7 @@ public class RatingsController {
     public ResponseEntity<Map<String, Object>> createBooking(@RequestParam String bookingNumber,
                                                             @RequestParam String guestFirstName,
                                                             @RequestParam String guestSurname,
-                                                            @RequestParam String accommodation,
+                                                            @RequestParam String accommodationName,
                                                             @RequestParam String reservationWebsite,
                                                             @RequestParam String checkInDate,
                                                             @RequestParam String checkOutDate,
@@ -99,7 +105,7 @@ public class RatingsController {
                     (entityConstructionService.makeMap("error", "Booking Number already in use"), HttpStatus.CONFLICT);
         } else {
             booking = bRepo.save(new Booking(bookingNumber, guestFirstName, guestSurname,
-                    aRepo.findById(Long.parseLong(accommodation)), reservationWebsite,
+                    accommodationName, reservationWebsite,
                     stringToLocalDateService.convertStringToLocalDate(checkInDate),
                     stringToLocalDateService.convertStringToLocalDate(checkOutDate),
                     -1, null,

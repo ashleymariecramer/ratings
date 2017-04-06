@@ -15,6 +15,7 @@ public class Booking {
     private String bookingNumber; //code provided from booking system
     private String guestFirstName;
     private String guestSurname;
+    private String accommodationName;
     private String reservationWebsite;
     private LocalDate checkIn;
     private LocalDate checkOut;
@@ -23,9 +24,9 @@ public class Booking {
     @ManyToOne(fetch = FetchType.EAGER)   //Links to employee tables by employee id
     @JoinColumn(name="employee_id")
     private Employee employee;
-    @ManyToOne(fetch = FetchType.EAGER)   //Links to employee tables by employee id
-    @JoinColumn(name="accommodation_id")
-    private Accommodation accommodation;
+//    @ManyToOne(fetch = FetchType.EAGER)   //Links to employee tables by employee id
+//    @JoinColumn(name="accommodation_id")
+
 
 
 
@@ -33,12 +34,12 @@ public class Booking {
     public Booking() { }
 
     public Booking(String bookingNumber, String guestFirstName, String guestSurname,
-                   Accommodation accommodation, String reservationWebsite, LocalDate checkIn, LocalDate checkOut,
+                   String accommodationName, String reservationWebsite, LocalDate checkIn, LocalDate checkOut,
                    double rating, String reviewURL, Employee employee ) {
         this.bookingNumber = bookingNumber;
         this.guestFirstName = guestFirstName;
         this.guestSurname = guestSurname;
-        this.accommodation = accommodation;
+        this.accommodationName = accommodationName;
         this.reservationWebsite = reservationWebsite;
 //        Date dateIn = new Date();
 //        this.checkIn = checkIn.from(dateIn.toInstant());
@@ -133,12 +134,12 @@ public class Booking {
         this.employee = employee;
     }
 
-    public Accommodation getAccommodation() {
-        return accommodation;
+    public String getAccommodationName() {
+        return accommodationName;
     }
 
-    public void setAccommodation(Accommodation accommodation) {
-        this.accommodation = accommodation;
+    public void setAccommodationName(String accommodationName) {
+        this.accommodationName = accommodationName;
     }
 
 

@@ -12,4 +12,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     //List<Employee> findEmployeesByUsername(@Param("name") String name); //This one is used on SalvoApplication security
     Employee findByUsername(@Param("username") String username); //This works to pull up entire Employee data based on username
     List<Employee> findAll();
+    List<Employee> findByAccommodationName(@Param("accomName") String accomName);
 }

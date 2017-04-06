@@ -1,9 +1,9 @@
 $(function() {
 //Main functions:
     activateUserAccountFunctions();
-    populateDropdownWithAllAccommodationNames();
-    populateDropdownWithAllEmployeeUsernames();
+//    populateDropdownWithAllAccommodationNames();
     activateCreateBookingFunctions();
+    populateDropdownWithAllEmployeeUsernames();
     deactivateDatesPriorToAndIncludingCheckIn();
 });
 
@@ -79,7 +79,7 @@ $(function() {
                          surname: form["surname"].value,
                          username: form["username"].value,
                          password: form["password"].value,
-                         accommodation: form["accommodation"].value })
+                         accommodationName: form["accommodationName"].value })
                  .done(function() {
                     console.log("new account created!"); //to check login has worked
                     location.reload();//Refreshes page to update with logged in user
@@ -109,11 +109,16 @@ $(function() {
               sweetAlert("Username must be filled out");
               return false;
           }
-      var pass = document.forms["signup_form"]["password"].value;
-          if (pass == "") {
+      var password = document.forms["signup_form"]["password"].value;
+          if (password == "") {
               sweetAlert("Password must be filled out");
               return false;
           }
+      var accommodationName = document.forms["signup_form"]["accommodationName"].value;
+         if (accommodationName == "null") {
+              sweetAlert("Workplace must be filled out");
+              return false;
+         }
 //       TODO: if you want to add an email too
 //      var atpos = email.indexOf("@");
 //      var dotpos = email.lastIndexOf(".");
@@ -147,7 +152,7 @@ $(function() {
                        { bookingNumber: form["bookingNumber"].value,
                          guestFirstName: form["guestFirstName"].value,
                          guestSurname: form["guestSurname"].value,
-                         accommodation: form["accommodation"].value,
+                         accommodationName: form["accommodationName"].value,
                          reservationWebsite: form["reservationWebsite"].value,
                          checkInDate: form["checkInDate"].value,
                          checkOutDate: form["checkOutDate"].value,
@@ -198,9 +203,9 @@ $(function() {
              sweetAlert("Guest's surname must be filled out");
              return false;
           }
-      var accommodation = document.forms["create_booking_form"]["accommodation"].value;
-          if (accommodation == "null") {
-                sweetAlert("Add a accommodation for this booking");
+      var accommodationName = document.forms["create_booking_form"]["accommodationName"].value;
+          if (accommodationName == "null") {
+                sweetAlert("Add accommodation for this booking");
                 return false;
           }
       var reservationWebsite = document.forms["create_booking_form"]["reservationWebsite"].value;
@@ -227,32 +232,46 @@ $(function() {
       return true;
   }
 
-function populateDropdownWithAllAccommodationNames() {
-  $.get("/api/all_accommodation")
-  .done(function(data) {
-      for (var i = 0; i < data.length; i++) {
-        var accommodationList = '<option value=' + data[i].id + ' >' + data[i].name + '</option>'
-        $("#accommodationList").append(accommodationList);
-        $("#workplaceList").append(accommodationList);
-        }
-  })
-  .fail(function( jqXHR, textStatus ) {
-  });
-}
+//function populateDropdownWithAllAccommodationNames() {
+//  $.get("/api/all_accommodation")
+//  .done(function(data) {
+//      for (var i = 0; i < data.length; i++) {
+//        var accommodationList = '<option value=' + data[i].id + ' >' + data[i].name + '</option>'
+//        $("#accommodationList").append(accommodationList);
+//        $("#workplaceList").append(accommodationList);
+//        }
+//  })
+//  .fail(function( jqXHR, textStatus ) {
+//  });
+//}
 
 
 
 function populateDropdownWithAllEmployeeUsernames() {
-  $.get("/api/all_employees_usernames")
-  .done(function(data) {
-      for (var i = 0; i < data.length; i++) {
-        $("#employeeList").append('<option value=' + data[i].username + ' >' +
-                                   data[i].fullName + '</option>');
-        }
-  })
-  .fail(function( jqXHR, textStatus ) {
-  });
+//need to trigger this once the accommodation name has been selected
+    $('#accommodationList').change(function() {
+        //reset drop down menu to avoid duplicating employees
+        $("#employeeList").html('<option value="null"> Choose person </option>');
+        var accomName = $('#accommodationList').val(); //gets the gamePlayer(gp) id number from the url
+        console.log(accomName);
+        var url = "/api/all_employees_usernames/" + accomName //inserts the accommodation name into the api
+        console.log(url);
+        $.get(url)
+        .done(function(data) {
+            console.log("get url");
+            console.log(data); //TODO: this is empty - why???
+
+          for (var i = 0; i < data.length; i++) {
+          //TODO: will probably need to clear the employee list each time before appending again or use .html
+            $("#employeeList").append('<option value=' + data[i].username + ' >' +
+                                       data[i].fullName + '</option>');
+            }
+        })
+        .fail(function( jqXHR, textStatus ) {
+        });
+    });
 }
+
 
 
 
@@ -269,11 +288,10 @@ function isCheckInDateLessThanThreeDaysAgo(){
     var dateIn = $('#checkInDate').val();
     var today = moment().format('YYYY-MM-DD'); //Gets today's date in the same format as datepicker
     var threeDaysAgo = moment(today).subtract(3, 'days').format('YYYY-MM-DD');
-    console.log("3 days ago: " + threeDaysAgo);
     if (moment(dateIn).isBefore(threeDaysAgo)){
         sweetAlert("The Check In Date you have entered is more than 3 days old");
         return false;
-    }// TODO: check in date should be no more than 3 days old eg. after 3 days ago
+        }
     return true;
 }
 
