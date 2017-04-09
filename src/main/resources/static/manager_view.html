@@ -19,7 +19,34 @@
             <h3>Welcome + manager name</h3>
         </div>
 
-        <div class="manager_view">
+        <div id="filter_buttons_for_bookings">
+            <button id="all_bookings_button" value="all">All Bookings</button>
+            <button id="blackSwanBCN_bookings_button" value="blackSwanBCN">Black Swan Barcelona Bookings</button>
+            <button id="blackSwanSVQ_booking_button" value="blackSwanSVQ" >Black Swan Sevilla Bookings</button>
+        </div>
+
+
+        <div class="manager_view_all">
+            <h2>All Bookings</h2>
+            <table class="table">
+                <thead>
+                <th>Booking Number</th>
+                <th>Guest Name</th> <!-- combined first and second name-->
+                <th>Reservation Website</th>
+                <th>Check-In Date</th>
+                <th>Check-Out Date</th>
+                <th>Rating</th>
+                <th>URL of review</th>
+                <th>Person Responsable</th>
+                <th>Actions</th>
+                </thead>
+
+                <tbody id="manager_view_all">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="manager_view_blackSwanBCN">
             <h2>Barcelona Bookings</h2>
             <table class="table">
                 <thead>
@@ -34,12 +61,12 @@
                 <th>Actions</th>
                 </thead>
 
-                <tbody id="managerViewTableBcn">
+                <tbody id="manager_view_blackSwanBCN">
                 </tbody>
             </table>
         </div>
 
-        <div class="manager_view_svq">
+        <div class="manager_view_blackSwanSVQ">
             <h2>Sevilla Bookings</h2>
             <table class="table">
                 <thead>
@@ -54,7 +81,7 @@
                 <th>Actions</th>
                 </thead>
 
-                <tbody id="managerViewTableSvq">
+                <tbody id="manager_view_blackSwanSVQ">
                 </tbody>
             </table>
         </div>

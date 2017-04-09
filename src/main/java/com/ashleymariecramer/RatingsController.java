@@ -68,8 +68,8 @@ public class RatingsController {
 //                .collect(toList());
 //    }
 
-    /****************************** API / GET ALL EMPLOYEES USERNAMES **************************************/
-    //3s. Return a list of all employees saved in system
+    /****************************** GET EMPLOYEES USERNAMES **************************************/
+    //3a. Return a list of all employees saved in system
     @RequestMapping(path = "/all_employees_usernames", method = RequestMethod.GET)
     public List<Object> getAllEmployees() {
         return eRepo.findAll().stream()
@@ -86,7 +86,7 @@ public class RatingsController {
                 .collect(toList());
     }
 
-    /****************************** API / BOOKINGS **************************************/
+    /****************************** API / CREATE BOOKINGS **************************************/
     //4. Create new bookings in the system
     @RequestMapping(path = "/bookings", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> createBooking(@RequestParam String bookingNumber,
@@ -120,20 +120,29 @@ public class RatingsController {
     }
 
     /****************************** API / ADMIN VIEW **************************************/
-    //5. List of All games to be shown whether user logged in or not
+//    5. List of All games to be shown whether user logged in or not
 //    @RequestMapping(path = "/admin_view", method = RequestMethod.GET)
-//    public List<Object> getAllBookings() {
+//    public List<Object> getAllBookingsAdmin() {
 //        return bRepo.findAll().stream().map(booking -> allBookingsService.makeAllBookingsDTO(booking)).collect(toList());
 //    }
 
-    /****************************** API / MANAGER VIEWs **************************************/
-    //6. List of All games to be shown whether user logged in or not
+    /****************************** MANAGER VIEWS OF BOOKINGS **************************************/
+    //6a. Return a list of all bookingd saved in system
     @RequestMapping(path = "/manager_view", method = RequestMethod.GET)
     public List<Object> getAllBookings() {
-        //TODO: generate repo name from last 3 digits of API url + Repo
-        return bRepo.findAll().stream().map(booking -> allBookingsService.makeAllBookingsDTO(booking)).collect(toList());
+        return bRepo.findAll().stream()
+                .map(booking -> allBookingsService.makeAllBookingsDTO(booking))
+                .collect(toList());
     }
 
+    //6b. Return a list of booking by accommodation name
+    @RequestMapping("/manager_view/{accomName}")
+    public List <Object> getAllBookingsByAccomodationName(@PathVariable String accomName) {
+        return bRepo.findByAccommodationName(accomName)
+                .stream()
+                .map(booking -> allBookingsService.makeAllBookingsDTO(booking))
+                .collect(toList());
+    }
 
     /****************************** API / EMPLOYEE VIEW **************************************/
     //7. List of All games to be shown whether user logged in or not

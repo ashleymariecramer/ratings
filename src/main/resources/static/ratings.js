@@ -259,12 +259,11 @@ function populateDropdownWithAllEmployeeUsernames() {
         $.get(url)
         .done(function(data) {
             console.log("get url");
-            console.log(data); //TODO: this is empty - why???
+            console.log(data);
 
           for (var i = 0; i < data.length; i++) {
-          //TODO: will probably need to clear the employee list each time before appending again or use .html
             $("#employeeList").append('<option value=' + data[i].username + ' >' +
-                                       data[i].fullName + '</option>');
+                               data[i].fullName + '</option>');
             }
         })
         .fail(function( jqXHR, textStatus ) {
