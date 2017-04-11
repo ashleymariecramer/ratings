@@ -30,15 +30,20 @@ public class RatingsApplication {
 
 			// save a couple of employees
 			employeeRepo.save(new Employee
-					("Nattie", "Munchkins", "Nat", "111", "blackSwanBCN"));
+					("Nattie", "Munchkins", "ashleymariecramer@gmail.com",
+							"Nat2011", "111", "blackSwanBCN", "user"));
 			employeeRepo.save(new Employee
-					("Noey", "Boo", "Noeys", "111", "blackSwanSVQ"));
+					("Noey", "Boo", "ashleymariecramer@gmail.com",
+							"Noeys2013", "111", "blackSwanSVQ", "user"));
 			employeeRepo.save(new Employee
-					("Marky", "Mark", "Markitus", "111", "blackSwanBCN"));
+					("Elijah", "Robert", "ashleymariecramer@gmail.com", "ElijahBaby",
+							"111", "blackSwanBCN", "user"));
 			employeeRepo.save(new Employee
-					("Nacho", "Honey", "Natx", "111", "blackSwanBCN"));
+					("Nacho", "Honey", "ashleymariecramer@gmail.com",
+							"Natx1973", "111", "all", "manager"));
 			employeeRepo.save(new Employee
-					("Ashley", "Marie", "AMC", "111", "blackSwanSVQ"));
+					("Ashley", "Marie", "ashleymariecramer@gmail.com",
+							"AMC1981", "111", "all", "admin"));
 
 //			accommodationRepo.save(new Accommodation("Black Swan Barcelona", "Barcelona"));
 //			accommodationRepo.save(new Accommodation("Black Swan Sevilla", "Sevilla"));

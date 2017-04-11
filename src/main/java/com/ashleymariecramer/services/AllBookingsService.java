@@ -23,9 +23,9 @@ public class AllBookingsService {
         dto.put("guestName", booking.getGuestFirstName() + " " + booking.getGuestSurname());
         dto.put("accommodation", booking.getAccommodationName());
         dto.put("reservationWebsite", booking.getReservationWebsite());
-        dto.put("checkIn", booking.getCheckIn().toString());
-//                getDayOfMonth() + "-" + barcelonaBooking.getCheckIn().getMonth()
-//                + "-" + barcelonaBooking.getCheckIn().getYear()); //TODO this needs to be converted to a visible format
+//        dto.put("checkIn", booking.getCheckIn().toString()); //Talternative but less visible than month in words
+        dto.put("checkIn", booking.getCheckIn().getDayOfMonth() + "-" + booking.getCheckIn().getMonth()
+                + "-" + booking.getCheckIn().getYear());
         dto.put("checkOut", booking.getCheckOut().getDayOfMonth() + "-" + booking.getCheckOut().getMonth()
                 + "-" + booking.getCheckOut().getYear());
         dto.put("rating", booking.getRating());

@@ -40,6 +40,27 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 // for that user, and the role(s) that user has.
 //ASK: why is this in plural 'employees' as there is only ever one employee logged in at a time?
 //ASK: Seems its a Spring thing cos plural works but using singular 'loggedInEmployee' did not
+
+ //TODO: ALternative to test once I have created the staffMember entity
+ @Override
+ public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
+ //Instead of employee entity call it user and it has a field called jobStatus: employee, manager
+ //so when creating roles we first search in suers for the username
+ List<StaffMember> staffMembers = staffMemberRepository.findstaffMembersByUsername(name);
+ if (!staffMembers.isEmpty()) {
+ StaffMember staffMember = staffMembers.get(0);
+ if (staffMember.getJobStatus() == "employee"){
+ return new User(staffMember.getUsername(), staffMember.getPassword(),
+ AuthorityUtils.createAuthorityList("EMPLOYEE"));
+ }
+ if (staffMember.getJobStatus() == "manager"){
+ return new User(staffMember.getUsername(), staffMember.getPassword(),
+ AuthorityUtils.createAuthorityList("MANAGER"));
+ }
+ } else {
+ throw new UsernameNotFoundException("Unknown user: " + name);
+ }
+ }
                 @Override
                 public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
                 List<Employee> employees = employeeRepository.findEmployeesByUsername(name); //TODO: this is plural
@@ -57,4 +78,6 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 
         }
 }**/
+
+//TODO maybe i can have two parts here whereby if the user is an employee they can redirected to ome page and if not found in employee repo then searcehd manager repo instead
 

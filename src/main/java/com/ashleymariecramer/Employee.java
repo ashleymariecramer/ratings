@@ -1,15 +1,16 @@
 package com.ashleymariecramer;
 
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.util.Set;
 
 @Entity
 public class Employee {
 
     //---------------------Properties(private)----------------------------------
-    // Double validation - in Javascript & JAVA - checks nickname, username and password are not empty @Empty
     @Id // id instance variable holds the database key for this class.
     @GeneratedValue(strategy= GenerationType.AUTO) // tells JPA to get the ID from the DBMS.
     private long id;
@@ -17,31 +18,35 @@ public class Employee {
     private String firstName;
     @NotEmpty(message = "Please enter a surname")
     private String surname;
-//    @NotEmpty (message = "Please enter an email address")
-//    @Email(message = "Please enter valid email address")
-//    @Pattern(regexp=".+@.+\\..+", message="Please provide a valid email address") //checks email has format x@y.z
-//    private String email;
+    @NotEmpty (message = "Please enter an email address")
+    @Email(message = "Please enter valid email address")
+    @Pattern(regexp=".+@.+\\..+") //checks email has format x@y.z
+    private String email;
     @NotEmpty(message = "Please enter a username")
     private String username;
     @NotEmpty (message = "Please enter a password")
     private String password;
     @NotEmpty (message = "Please enter accommodation name")
     private String accommodationName;
+    private String role;
     @OneToMany(mappedBy="employee", fetch= FetchType.EAGER)
     private Set<Booking> bookings;
-//    @ManyToOne(fetch = FetchType.EAGER)   //Links to accommodation tables by accommodation id
-//    @JoinColumn(name="accommodation_id")
-//    private Accommodation accommodation;
+
+
 
     // ---------------------Constructors(public)----------------------------------
     public Employee() { }
 
-    public Employee(String firstName, String surname, String username, String password, String accommodationName) {
+    public Employee(String firstName, String surname, String email,
+                    String username, String password,
+                    String accommodationName, String role) {
         this.firstName = firstName;
         this.surname = surname;
+        this.email = email;
         this.username = username;
         this.password = password;
         this.accommodationName = accommodationName;
+        this.role = role;
     }
 
     // ---------------------Methods(public)----------------------------------
@@ -66,12 +71,20 @@ public class Employee {
         this.surname = surname;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.username = email;
+    }
+
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String email) {
-        this.username = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -82,7 +95,7 @@ public class Employee {
         this.password = password;
     }
 
-    public Set<Booking> getBooking() {
+    public Set<Booking> getBookings() {
         return bookings;
     }
 
@@ -93,6 +106,15 @@ public class Employee {
     public String getAccommodationName() {
         return accommodationName;
     }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.password = role;
+    }
+
 }
 
 

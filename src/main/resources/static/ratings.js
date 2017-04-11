@@ -77,9 +77,11 @@ $(function() {
                 $.post("/api/employees",
                        { firstName: form["firstName"].value,
                          surname: form["surname"].value,
+                         email: form["email"].value,
                          username: form["username"].value,
                          password: form["password"].value,
-                         accommodationName: form["accommodationName"].value })
+                         accommodationName: form["accommodationName"].value,
+                         role: form["role"].value })
                  .done(function() {
                     console.log("new account created!"); //to check login has worked
                     location.reload();//Refreshes page to update with logged in user
@@ -93,16 +95,27 @@ $(function() {
 
    //** Validate form for signup **
   //check all fields are filled in and email has correct format
-  function validateSignupForm() {
+  function validateSignupForm() {  //TODO maybe break these down into individual functions would be cleaner
       var name = document.forms["signup_form"]["firstName"].value;
           if (name == "") {
               sweetAlert("First Name must be filled out");
               return false;
           }
       var surname = document.forms["signup_form"]["surname"].value;
-          if (name == "") {
+          if (surname == "") {
               sweetAlert("Surname must be filled out");
               return false;
+          }
+      var email = document.forms["signup_form"]["email"].value;
+          if (email == "") {
+              sweetAlert("Email must be filled out");
+              return false;
+          }
+      var atpos = email.indexOf("@");
+      var dotpos = email.lastIndexOf(".");
+          if (atpos<1 || dotpos<atpos+2 || dotpos+2>=email.length) {
+              sweetAlert("Not a valid e-mail address");
+               return false;
           }
       var username = document.forms["signup_form"]["username"].value;
           if (username == "") {
@@ -119,13 +132,11 @@ $(function() {
               sweetAlert("Workplace must be filled out");
               return false;
          }
-//       TODO: if you want to add an email too
-//      var atpos = email.indexOf("@");
-//      var dotpos = email.lastIndexOf(".");
-//          if (atpos<1 || dotpos<atpos+2 || dotpos+2>=email.length) {
-//              sweetAlert("Not a valid e-mail address");
-//              return false;
-//          }
+      var role = document.forms["signup_form"]["role"].value;
+          if (role == "null") {
+              sweetAlert("Role must be filled out");
+              return false;
+          }
       return true;
   }
 

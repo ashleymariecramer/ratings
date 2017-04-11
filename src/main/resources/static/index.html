@@ -21,8 +21,6 @@
 
         <form id="login_form" name="login_form" onsubmit="return false">
             <label>Username: <input type="text" name="username"></label>
-            <!-- TODO: Email address is username or allow employees to choose a username
-            TODO: - either way needs to be unique - type 'email' or just 'text'?-->
             <label>Password: <input type="password" name="password"></label> <!-- password type keeps text entered hidden -->
             <button id="login_button" type="submit">Login!</button>
             Not yet created your own account? <button id="create_account_button" type="submit">Sign up!</button>
@@ -35,6 +33,7 @@
         <form id="signup_form" name="signup_form" onsubmit="return false">
             <label>First Name: <input type="text" name="firstName"></label>
             <label>Surname: <input type="text" name="surname"></label>
+            <label>Email: <input type="email" name="email"></label>
             <label>Username: <input type="text" name="username"></label>
             <label>Password: <input type="text" name="password"></label>
             <label>Workplace:
@@ -42,6 +41,15 @@
                     <option value="null">Choose a workplace</option>
                     <option value="blackSwanBCN">Black Swan Barcelona</option>
                     <option value="blackSwanSVQ">Black Swan Sevilla</option>
+                    <option value="all">All (Managers ONLY)</option>
+                </select>
+            </label>
+            <label>Role:
+                <select name="role" id="roleList">
+                    <option value="null">Choose a role</option>
+                    <option value="user">USER</option>
+                    <option value="manager">MANAGER</option>
+                    <option value="admin">ADMIN</option>
                 </select>
             </label>
             <button id="signup_button" type="submit" type="submit">Sign up!</button>

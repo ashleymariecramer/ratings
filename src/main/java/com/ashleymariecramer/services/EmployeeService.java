@@ -21,6 +21,7 @@ public class EmployeeService {
         dto.put("id", employee.getId());
         dto.put("fullName", employee.getFirstName() + " " + employee.getSurname());
         dto.put("workplace", employee.getAccommodationName());
+        dto.put("role", employee.getRole());
         return dto;
     }
 
