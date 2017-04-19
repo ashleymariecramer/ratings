@@ -14,4 +14,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Employee findById(@Param("employeeId") Long employeeId);
     List<Employee> findAll();
     List<Employee> findByAccommodationName(@Param("accomName") String accomName);
+    List<Employee> findEmployeesByUsername(String name);
 }
