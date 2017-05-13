@@ -3,23 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <title>Ratings</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="ratingsStyle.css">
+    <script src="https://use.fontawesome.com/dbb07acbd2.js"></script>
+    <!-- Zurb Foundation CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.1/css/foundation-flex.css" />
+    <!-- Motion UI -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/motion-ui/1.1.1/motion-ui.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC|Raleway" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/sweetalert.css">
+    <link rel="stylesheet" type="text/css" href="/css/ratingsStyle.css">
 </head>
 <body>
 
-    <div id="header">
-        <!--<img class="logo-img" src="images/black_swan_logo.jpg" alt="logo"/>-->
-        <h1>Black Swan Ratings Tracker</h1>
-    </div>
+    <header>
+        <div class="row align-spaced">
+            <div class="small-2 medium-2 large-2 columns text-center">
+                <img id="logo-img" src="/images/black_swan_logo.jpg" alt="logo"/>
+            </div>
+            <div class="columns">
+                <h1 class='text-center'>Ratings Tracker</h1>
+            </div>
+            <div class="small-2 medium-2 large-2 columns">
+                <div>
+                    <div id="userDetails">
+                    </div>
+                    <form class='text-center' id="logout_form" name="logout_form" onsubmit="return false">
+                        <button id="logout_button" type="submit">Log out</button>
+                    </form>
+                </div>
 
-    <div class="container">
-        <div id="message">
-            <h2>Employee Dashboard</h2>
-            <h3>Welcome + employee name</h3>
+            </div>
+        </div>
+    </header>
+
+    <div class="container row align-spaced">
+
+        <div class="small-10 medium-6 large-4 columns">
+            <div id="current_user" class="columns">
+            </div>
         </div>
 
-
+    </div>
+    
         <div class="employee_view">
             <h2></h2>
             <table class="employee_view">
@@ -30,8 +54,8 @@
                 <th>Check-In Date</th>
                 <th>Check-Out Date</th>
                 <th>Hits on Opponent</th>
-    <!--        <th>Rating</th>
-                <th>URL of review</th>    -->
+                <!--        <th>Rating</th>
+                            <th>URL of review</th>    -->
                 <th>Actions</th>
                 </thead>
                 <tbody id="employee_view">
@@ -39,10 +63,12 @@
             </table>
         </div>
 
-    </div> <!-- end of div container -->
 
     <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
-    <script src="ratings.js"></script>
-    <script src="employee.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.1/js/foundation.min.js" integrity="sha256-Nd2xznOkrE9HkrAMi4xWy/hXkQraXioBg9iYsBrcFrs=" crossorigin="anonymous"></script>
+    <script src="/js/moment.js"></script>
+    <script src="/js/sweetalert.min.js"></script>
+    <script src="/js/ratings.js"></script>
+    <script src="/js/employee.js"></script>
 </body>
 </html>

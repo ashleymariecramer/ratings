@@ -9,6 +9,7 @@ $(function() {
 
 //Groups together all the functions related to accessing user accounts
   function activateUserAccountFunctions(){
+    showPassword();
     logIn();
     logOut();
   }
@@ -59,17 +60,30 @@ $(function() {
         if (data.user == "guest"){
             $("#login_form").show(); //show login
             $("#logout_form").hide(); //hides logout button
-            $("#current_user").append("<h3 class='warning'>" + "Please login" + "</h3>");
+            $("#userDetails").append("<p class='warning text-center'><i class='fa fa-exclamation-triangle warning' aria-hidden='true'></i> Not Logged In</p>"); //no user details
+            $("#current_user").append("<h3 class='warning text-center'>" + "Oops. You're not logged in" + "</h3>");
         }
         else{
             $("#login_form").hide(); //hides login
             $("#logout_form").show(); //shows logout button
-            $("#current_user").append("<h2>" + "Hi there " + "<b>" + data.loggedInUser.firstName + "</b>" + "</h2>");
+            $("#userDetails").append("<p class='text-center'>" + "<i class='fa fa-user-circle-o' aria-hidden='true'></i>" + " " + data.loggedInUser.user + "</p>");
+            $("#current_user").append("<h2 class='text-center'>" + "Hi there " + "<b>" + data.loggedInUser.firstName + "</b>" + "</h2>");
             console.log("loggedInUser Role: " + data.loggedInUser.role);
             var role = data.loggedInUser.role
         }
   }
 
+  //** Show password **
+  function showPassword(){
+    $("#show_password").click(function(evt) {
+        if ($(this).is(':checked')){
+            $("#password_field").prop('type', 'text');
+        }
+        else {
+            $("#password_field").prop('type', 'password');
+        }
+    });
+  }
 
   //** Login **
   function logIn() {

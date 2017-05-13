@@ -122,17 +122,6 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 			@Override
 			public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
 				List<Employee> employees = employeeRepository.findEmployeesByUsername(name);
-//				if (!employees.isEmpty()) {
-//					Employee employee = employees.get(0);
-//					return new User(employee.getUsername(), employee.getPassword(),
-//							AuthorityUtils.createAuthorityList("USER"));
-////									.commaSeparatedStringToAuthorityList("USER,ADMIN"));
-//					//only one role here = USER, to add multiple roles e.g., "INSTRUCTOR,STUDENT"
-//					//use: AuthorityUtils.commaSeparatedStringToAuthorityList("INSTRUCTOR,STUDENT"));
-//				} else {
-//					throw new UsernameNotFoundException("Unknown user: " + name);
-//				}
-
                     if (!employees.isEmpty()) {
                         Employee employee = employees.get(0);
 //We have 4 roles for now USER (for regular employees), MANAGER for all superiors, ADMIN (to create users), & DEVELOPER
@@ -163,24 +152,23 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 // This method looks up a user by name in your repository, and, if found, creates and returns a
 // org.springframework.security.core.userdetails.Employee object, with the stored user name, the stored password
 // for that user, and the role(s) that user has.
-//TODO maybe i can have two parts here whereby if the user is an employee they can redirected to ome page and if not found in employee repo then searcehd manager repo instead
+//TODO maybe i can have two parts here whereby if the user is an employee they can redirected to one page and if not found in employee repo then searcehd manager repo instead
 
 //TODO: here the different end points and views can control what manager(ADMIN) or employees(USER) see.
 //Add in Configuration Security to define which authentication method is used & which pages are restricted to USERS or ADMIN
 @Configuration
 @EnableWebSecurity
-//TODO: think this is in red for now as I have deactivated the dependency for security in the pom.xml
 class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-				.authorizeRequests()
+				.authorizeRequests() //NOTE: need the ´/´ before api, rest etc for it to work
 				//USERS
 				.antMatchers("/employee_view.html", "/employee_view", "/employee_view/**"
 							 ).hasAuthority("USER")
 				//MANAGERS
-				.antMatchers("manager_view.html", "api/manager_view", "api/manager_view/**",
-						"api/all_employees_usernames", "api/all_employees_usernames/**").hasAuthority("MANAGER")
+				.antMatchers("/manager_view.html", "/api/manager_view", "/api/manager_view/**",
+						"/api/all_employees_usernames", "/api/all_employees_usernames/**").hasAuthority("MANAGER")
 				//ADMIN
 				.antMatchers("/api/employees" ).hasAuthority("ADMIN")
 				//DEVELOPERS
@@ -198,8 +186,6 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.logout()
 				.logoutUrl("/api/logout")
 				.permitAll(); // technically not needed but logical to have it here
-		//TODO: need to create 3 basic pages for now - index.html which is the login or sign up - accesible for all
-		//TODO: manager view and employee view. Plus apis for login and logout
 
 //  This code disables the CSFR tokens - and
 		//turn off checking for CSRF tokens

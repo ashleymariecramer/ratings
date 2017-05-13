@@ -1,48 +1,45 @@
-//package edu.example;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.security.core.Authentication;
-//import org.springframework.stereotype.Service;
-//
-//import java.util.List;
-//import java.util.Map;
-//
-//import static java.util.stream.Collectors.toList;
-//
-//@Service
-//public class ValidationService{
+package com.ashleymariecramer.services;
 
-//    @Autowired private SalvoService salvoService;
-//    @Autowired private ShipRepository shRepo;
-//    @Autowired private PlayerRepository pRepo;
-//    @Autowired private GamePlayerRepository gpRepo;
-//    @Autowired private SalvoRepository slRepo;
-//    @Autowired private GameRepository repo;
-//
-//
-//    //Auxiliary function to check player is logged in and is a gamePlayer in the game
-//    public ResponseEntity<Map<String, Object>> verifyGamePlayer(Long gpId, Authentication authentication) {
-//        Player player = pRepo.findByUsername(salvoService.getUsername(authentication)); //to check if player loggedin
-//        if (player == null) {
+import com.ashleymariecramer.Employee;
+import com.ashleymariecramer.EmployeeRepository;
+import com.ashleymariecramer.services.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+import static java.util.stream.Collectors.toList;
+
+@Service
+public class ValidationService{
+
+    @Autowired private EntityConstructionService entityConstructionService;
+
+//    //Auxiliary function to check user is logged in
+//    public ResponseEntity<Map<String, Object>> verifyUserLoggedIn(Authentication authentication) {
+//        Employee employee = eRepo.findByUsername(salvoService.getUsername(authentication)); //to check if player loggedin
+//        if (employee == null) {
 //            return new ResponseEntity<>(salvoService.makeMap("error", "Not logged in"), HttpStatus.UNAUTHORIZED); //401 Works! :)
 //        }
-//        GamePlayer gamePlayer = gpRepo.findOne(gpId); //check if gamePlayer id exists
-//        if (gamePlayer == null) {
-//            return new ResponseEntity<>(salvoService.makeMap("error", "No such gamePlayer"), HttpStatus.UNAUTHORIZED); //401 Works! :)
-//        }//
+
 //        //Check current player in open game is not same logged in user - comparing usernames //TODO: extract this to be used for salvoes too
 //        Long gameId = gamePlayer.getGame().getId();
 //        String currentPlayerUsername = gamePlayer.getPlayer().getUsername();
 //        String playerUsername = player.getUsername();
 //        if (playerUsername != currentPlayerUsername) {
-//            return new ResponseEntity<>(salvoService.makeMap("error", "You are not the gamePlayer in this game"), HttpStatus.UNAUTHORIZED); //401 Works! :)
+//            return new ResponseEntity<>(salvoService.makeMap("error", "You need to be logged in"), HttpStatus.UNAUTHORIZED); //401 Works! :)
 //        }
-//        return new ResponseEntity<>(salvoService.makeMap("status", "Player & gamePlayer authorized"), HttpStatus.OK);
+//        return new ResponseEntity<>(salvoService.makeMap("status", "User logged in correctly"), HttpStatus.OK);
 //    }
 //
 //
+
+
+
 //    public ResponseEntity<Map<String, Object>> validateShips(GamePlayer gamePlayer, List<Ship> ships){
 //
 //        if (gamePlayer.getShip().size() == 5) { // If 5 ships have already been placed
@@ -110,4 +107,7 @@
 //        }
 //    }
 //
-//}
+
+
+
+} //End of Validation Service

@@ -4,6 +4,7 @@ import com.ashleymariecramer.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +20,6 @@ public class RatingsController {
     private EmployeeRepository eRepo;
     @Autowired
     private BookingRepository bRepo;
-//    @Autowired
-//    private AccommodationRepository aRepo;
     @Autowired
     private AllBookingsService allBookingsService;
     @Autowired
@@ -31,8 +30,10 @@ public class RatingsController {
     private StringToLocalDateService stringToLocalDateService;
     @Autowired
     private EmployeeService employeeService;
-//    @Autowired
-//    private AccommodationService accommodationService;
+    @Autowired
+    private ValidationService validationService;
+    @Autowired
+    private AutenticationService authenticationService;
 
     /*********************************** API CREATE EMPLOYEES ****************************************/
     //1. Create new employees
@@ -46,11 +47,10 @@ public class RatingsController {
                                                             @RequestParam String password,
                                                             @RequestParam String accommodationName,
                                                             @RequestParam String role) {
+
         Employee employee = eRepo.findByUsername(username); //gives a 409 Conflict Error
 
-// //TODO: check validation to check employee not already created working correctly
-// return validateEmployee(firstName, surname, username, password);
-//        return validationService.validatePlayer(firstName, surname, username, password);
+// validation to check employee not already created
         if (employee != null) {
             return new ResponseEntity<Map<String, Object>>
                     (entityConstructionService.makeMap("error", "Username already in use"), HttpStatus.CONFLICT);
@@ -63,13 +63,30 @@ public class RatingsController {
     }
 
 
-    /****************************** API / GET ALL ACCOMMODATION NAMES **************************************/
-//    //2. Return a list of all accommodation saved in system
-//    @RequestMapping(path = "/all_accommodation", method = RequestMethod.GET)
-//    public List<Object> getAllAccomodation() {
-//        return aRepo.findAll().stream().map(accommodation -> accommodationService.makeAccommodationListDTO(accommodation))
-//                .collect(toList());
-//    }
+    /******************************* API /CURRENT USER ********************************************/
+    //determines if a user is logged in and if so returns their username otherwise assigns username 'guest' (which would not let the user do anything other than login
+
+    @RequestMapping(path = "/currentUser", method = RequestMethod.GET)
+    public Map<String, Object> getUser(Authentication authentication) {
+        if (!authenticationService.isGuest(authentication)) { //This checks there is not a guest user
+            Employee loggedInUser = eRepo.findByUsername(authentication.getName());
+            return authenticationService.makeUserDTO(loggedInUser, authentication);
+        }
+        return authenticationService.makeGuestUserDTO();
+    }
+
+    /******************************* API /CURRENT USER ID NUMBER********************************************/
+    //determines if a user is logged in and if so returns their username otherwise assigns username 'guest' (which would not let the user do anything other than login
+//ASK: code here to just get id number nothing more
+
+    @RequestMapping(path = "/currentUserId", method = RequestMethod.GET)
+    public Long getUserId(Authentication authentication) {
+        if (!authenticationService.isGuest(authentication)) { //This checks there is not a guest user
+            Employee loggedInUser = eRepo.findByUsername(authentication.getName());
+            return authenticationService.getUserId(authentication); //this is getting the id correctly but problem on js side
+        }
+        return null;
+    }
 
     /****************************** GET EMPLOYEES USERNAMES **************************************/
     //3a. Return a list of all employees saved in system
@@ -83,10 +100,12 @@ public class RatingsController {
     //3b. Return a list of employees by accommodation name
     @RequestMapping("/all_employees_usernames/{accomName}")
     public List <Object> findEmployeesByAccomodationName(@PathVariable String accomName) {
-        return eRepo.findByAccommodationName(accomName)
+        return eRepo
+                .findByAccommodationName(accomName)
                 .stream()
                 .map(employee -> employeeService.makeUsernameListDTO(employee))
                 .collect(toList());
+
     }
 
     /****************************** API CREATE BOOKINGS **************************************/
@@ -148,17 +167,27 @@ public class RatingsController {
     }
 
     /****************************** API EMPLOYEE VIEW **************************************/
-    //7. List of All bookings related to a specific employee
+//    7. List of All bookings related to a specific employee
     @RequestMapping(path = "/employee_view/{employeeId}", method = RequestMethod.GET)
     public List<Object> getAllBookingsByEmployee(@PathVariable Long employeeId) {
         return eRepo.findOne(employeeId)
                 .getBookings()
                 .stream()
                 .map(booking -> allBookingsService.makeAllBookingsDTO(booking))
-//                .map(booking -> allBookingsAssignedToEmployeeService.makeAllBookingsDTO(booking))
                 .collect(toList());
     }
-
+//    public List<Object> getAllBookingsByEmployee(@RequestParam("employeeId") Long employeeId, Authentication authentication) {
+//        //ASK: can i just reassign user id here????
+//        Employee loggedInUser = eRepo.findByUsername(authentication.getName());
+//        employeeId = authenticationService.getUserId(authentication); //this is getting the id correctly but problem on js side
+//        System.out.println(employeeId);
+//        return eRepo.findOne(employeeId)
+//                .getBookings()
+//                .stream()
+//                .map(booking -> allBookingsService.makeAllBookingsDTO(booking))
+////                .map(booking -> allBookingsAssignedToEmployeeService.makeAllBookingsDTO(booking))
+//                .collect(toList());
+//    }
 
 } // End of RatingsController
 

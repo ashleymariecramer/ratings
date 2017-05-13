@@ -34,7 +34,6 @@
 			<artifactId>spring-boot-starter-data-rest</artifactId>
 		</dependency>
 
-		<!--TODO: uncomment this out later when ready to test->-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
@@ -79,6 +78,23 @@
 					<printSummary>true</printSummary>
 				</configuration>
 			</plugin>
+
+			<!--<plugin>-->
+				<!--<groupId>com.github.warmuuh</groupId>-->
+				<!--<artifactId>libsass-maven-plugin</artifactId>-->
+				<!--<version>0.2.6-libsass_3.4.0</version>-->
+
+				<!--<configuration>-->
+					<!--<inputPath>${basedir}/src/main/resources/static/sass/</inputPath>-->
+					<!--<outputPath>${basedir}/src/main/resources/static/css/</outputPath>-->
+					<!--<outputStyle>nested</outputStyle>-->
+					<!--<generateSourceMap>true</generateSourceMap>-->
+					<!--<sourceMapOutputPath>${basedir}/src/main/resources/static/css/</sourceMapOutputPath>-->
+					<!--<includePath>${basedir}/src/main/resources/static/css/</includePath>-->
+					<!--<omitSourceMapingURL>false</omitSourceMapingURL>-->
+				<!--</configuration>-->
+			<!--</plugin>-->
+
 
 		</plugins>
 	</build>

@@ -3,34 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <title>Ratings</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="sweetalert.css">
-    <link rel="stylesheet" type="text/css" href="ratingsStyle.css">
+    <script src="https://use.fontawesome.com/dbb07acbd2.js"></script>
+    <!-- Zurb Foundation CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.1/css/foundation-flex.css" />
+    <!-- Motion UI -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/motion-ui/1.1.1/motion-ui.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC|Raleway" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/sweetalert.css">
+    <link rel="stylesheet" type="text/css" href="/css/ratingsStyle.css">
 </head>
 <body>
 
-    <div id="header">
-        <!--<img class="logo-img" src="images/black_swan_logo.jpg" alt="logo"/>-->
-        <h1>Black Swan Ratings Tracker</h1>
-    </div>
+    <header>
+        <div class="row align-spaced">
+            <div class="small-2 medium-2 large-2 columns text-center">
+                <img id="logo-img" src="/images/black_swan_logo.jpg" alt="logo"/>
+            </div>
+            <div class="columns">
+                <h1 class='text-center'>Ratings Tracker</h1>
+            </div>
+            <div class="small-2 medium-2 large-2 columns">
+                <div>
+                    <div id="userDetails">
+                    </div>
+                    <form class='text-center' id="logout_form" name="logout_form" onsubmit="return false">
+                        <button id="logout_button" type="submit">Log out</button>
+                    </form>
+                </div>
 
-    <div class="container">
-        <div id="message">
-            <h2>Please login</h2>
+            </div>
+        </div>
+    </header>
+
+    <div class="container row align-spaced">
+
+        <div class="small-1 medium-3 large-4 columns">
         </div>
 
-        <form id="login_form" name="login_form" onsubmit="return false">
-            <label>Username: <input type="text" name="username"></label>
-            <label>Password: <input type="password" name="password"></label> <!-- password type keeps text entered hidden -->
-            <button id="login_button" type="submit">Login!</button>
-            Not yet created your own account? <button id="create_account_button" type="submit">Sign up!</button>
-        </form>
+        <div class="small-10 medium-6 large-4 columns">
+            <div id="current_user" class="columns">
+            </div>
+            <form id="login_form" name="login_form" onsubmit="return false">
+                <label>Username: <input type="text" name="username"></label>
+                <label>Password: <input id="password_field" type="password" name="password"></label> <!-- password type keeps text entered hidden -->
+                <div>
+                    <input id="show_password" name="show_password" type="checkbox"><label for="show_password">Show password</label>
+                    <!--<p class="text-right"><a href="#">Forgot your password?</a></p>TODO: to add in later-->
+                </div>
+                <button class="button expanded" id="login_button" type="submit">Login!</button>
+            </form>
+        </div>
 
-        <form id="logout_form" name="logout_form" onsubmit="return false">
-            <button id="logout_button" type="submit">Log out</button>
-        </form>
+        <div class="small-1 medium-3 large-4 columns">
+        </div>
 
-        <form id="signup_form" name="signup_form" onsubmit="return false">
+    </div>
+
+        <!--<form class="log-in-form" id="login_form" name="login_form" onsubmit="return false">-->
+            <!--<h4 class="text-center">Log in with your username</h4>-->
+            <!--<label>Username-->
+                <!--<input type="text" name="username" placeholder="user101">-->
+            <!--</label>-->
+            <!--<label>Password-->
+                <!--<input type="password" placeholder="Password">-->
+            <!--</label>-->
+            <!--<input id="show-password" type="checkbox"><label for="show-password">Show password</label>-->
+            <!--&lt;!&ndash;<p><input type="submit" class="button expanded" value="Log in"></input></p>&ndash;&gt;-->
+            <!--<button id="login_button" type="submit">Login!</button>-->
+            <!--<p class="text-center"><a href="#">Forgot your password?</a></p>-->
+        <!--</form>-->
+
+
+
+        <form id="create_user_form" name="createUser_form" onsubmit="return false">
             <label>First Name: <input type="text" name="firstName"></label>
             <label>Surname: <input type="text" name="surname"></label>
             <label>Email: <input type="email" name="email"></label>
@@ -52,7 +97,7 @@
                     <option value="admin">ADMIN</option>
                 </select>
             </label>
-            <button id="signup_button" type="submit" type="submit">Sign up!</button>
+            <button id="save_user_button" type="submit" type="submit">Create New User</button>
         </form>
 
 
@@ -84,15 +129,93 @@
             <button id="save_booking_button" type="submit" type="submit">Save Booking</button>
         </form>
 
-        <button id="create_booking_button" type="submit" type="submit">New Booking</button>
+        <div class="employee_view">
+            <h2></h2>
+            <table class="employee_view">
+                <thead>
+                <th>Booking Number</th>
+                <th>Guest Name</th> <!-- combined first and second name-->
+                <th>Reservation Website</th>
+                <th>Check-In Date</th>
+                <th>Check-Out Date</th>
+                <th>Hits on Opponent</th>
+                <!--        <th>Rating</th>
+                            <th>URL of review</th>    -->
+                <th>Actions</th>
+                </thead>
+                <tbody id="employee_view">
+                </tbody>
+            </table>
+        </div>
 
-        <button id="show_bookings_button" type="submit" type="submit">Show All Bookings</button>
-    </div>
+        <div class="manager_view_all">
+            <h2>All Bookings</h2>
+            <table class="table">
+                <thead>
+                <th>Booking Number</th>
+                <th>Guest Name</th> <!-- combined first and second name-->
+                <th>Reservation Website</th>
+                <th>Check-In Date</th>
+                <th>Check-Out Date</th>
+                <th>Rating</th>
+                <th>URL of review</th>
+                <th>Person Responsable</th>
+                <th>Actions</th>
+                </thead>
 
+                <tbody id="manager_view_all">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="manager_view_blackSwanBCN">
+            <h2>Barcelona Bookings</h2>
+            <table class="table">
+                <thead>
+                <th>Booking Number</th>
+                <th>Guest Name</th> <!-- combined first and second name-->
+                <th>Reservation Website</th>
+                <th>Check-In Date</th>
+                <th>Check-Out Date</th>
+                <th>Rating</th>
+                <th>URL of review</th>
+                <th>Person Responsable</th>
+                <th>Actions</th>
+                </thead>
+
+                <tbody id="manager_view_blackSwanBCN">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="manager_view_blackSwanSVQ">
+            <h2>Sevilla Bookings</h2>
+            <table class="table">
+                <thead>
+                <th>Booking Number</th>
+                <th>Guest Name</th> <!-- combined first and second name-->
+                <th>Reservation Website</th>
+                <th>Check-In Date</th>
+                <th>Check-Out Date</th>
+                <th>Rating</th>
+                <th>URL of review</th>
+                <th>Person Responsable</th>
+                <th>Actions</th>
+                </thead>
+
+                <tbody id="manager_view_blackSwanSVQ">
+                </tbody>
+            </table>
+        </div>
+
+
+
+    <!-- Compressed JavaScript -->
     <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
-    <script src="moment.js"></script>
-    <script src="sweetalert.min.js"></script>
-    <script src="ratings.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.1/js/foundation.min.js" integrity="sha256-Nd2xznOkrE9HkrAMi4xWy/hXkQraXioBg9iYsBrcFrs=" crossorigin="anonymous"></script>
+    <script src="/js/moment.js"></script>
+    <script src="/js/sweetalert.min.js"></script>
+    <script src="/js/ratings.js"></script>
 </body>
 </html>
 

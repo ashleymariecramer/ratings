@@ -3,11 +3,23 @@ $(function() {
     loadBookingsByEmployee();
 });
 
+//function getLoggedInEmployeeIdNumber() {
+//    var url = 'api/currentUserId'
+//    $.get(url)
+//    .done(function(data) {
+//    console.log("data: " + data);
+//        return data;
+//    })
+//    .fail(function( jqXHR, textStatus ) {
+//    });
+//}
+
 //TODO: Need to reset tables each time
 function loadBookingsByEmployee() {
-//need to get employee id from url
-    var employeeId = getEmployeeIdFromURL(); //gets the employee id number from the url
-    var url = 'api/employee_view/' + employeeId
+    var employeeId = getEmployeeIdFromURL();
+//    var employeeId = getLoggedInEmployeeIdNumber();
+     var url = 'api/employee_view/' + employeeId;
+    console.log("url: " + url);
     $.get(url)
     .done(function(data) {
         employeeBookingsMap(data);
@@ -15,6 +27,8 @@ function loadBookingsByEmployee() {
     .fail(function( jqXHR, textStatus ) {
     });
 }
+
+
 
 //get data from JSON and list of all games with game id, creation date, players emails
 function employeeBookingsMap(data) {
@@ -42,8 +56,9 @@ function employeeBookingsMap(data) {
 // This gets the employee Id query value from the url. document.location.search gives the query e.g. "?gp=1"
 // document.location.search.substr(1) returns the parameter & its value without the & e.g. "employee=1"
 function getEmployeeIdFromURL(){
-  var query = document.location.search.substr(1).split('=') //e.g. takes "gp=1" & splits into ["gp", "1"]
+  var query = document.location.search.substr(1).split('=') //e.g. takes "employeeId=1" & splits into ["employeeId", "1"]
   var employeeId = query[1];
+  console.log("employeeId from employee js: " + employeeId)
   return employeeId;
 }
 
