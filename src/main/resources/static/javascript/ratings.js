@@ -1,29 +1,75 @@
 $(function() {
 //Main functions:
+    loadCurrentUser();
     activateUserAccountFunctions();
-//    populateDropdownWithAllAccommodationNames();
-    activateCreateBookingFunctions();
-    populateDropdownWithAllEmployeeUsernames();
-    deactivateDatesPriorToAndIncludingCheckIn();
 });
-
 
 
 // ***  Auxiliary functions  ***  //
 
-//Groups together all the functions related to creating, accessing user accounts
+//Groups together all the functions related to accessing user accounts
   function activateUserAccountFunctions(){
     logIn();
     logOut();
-    showCreateAccountForm();
-    signUp();
+  }
+
+//** Show create New User account button **
+      function showCreateUserButton() {
+        $("#create_user_button").show();
+//        activateCreateUserFunctions(); //TODO: this isn't the place to put this we should wait til the button is clicked
+      }
+
+//** Show Create New Booking button **
+      function showCreateBookingButton() {
+        $("#create_booking_button").show();
+//        activateCreateBookingFunctions(); //TODO: this isn't the place to put this we should wait til the button is clicked
+      }
+
+//Groups together all the functions related to creation of new user accounts
+  function activateCreateUserFunctions(){
+    showCreateUserForm();
+    createNewUser();
+    validateCreateUserForm();
   }
 
 //Groups together all the functions related to creating bookings
   function activateCreateBookingFunctions(){
     showCreateBookingForm();
+    populateDropdownWithAllEmployeeUsernames();
+    deactivateDatesPriorToAndIncludingCheckIn();
     createNewBooking();
+    validateBookingForm();
   }
+
+//ajax call to the api to get the JSON data - if successful it uses data to draw a list of games if not it returns an error
+  function loadCurrentUser() {
+    $.getJSON("/api/currentUser")
+    .done(function(data) {
+          console.log("getJSON: " + data );
+          loggedInUserMap(data);
+          })
+    .fail(function( jqXHR, textStatus ) {
+      showOutput( "Failed: " + textStatus );
+    });
+  }
+
+ //get data from JSON and create a new variable which contains the logged in users details.
+  function loggedInUserMap(data) {
+        console.log("loggedInUserMap: " + data )
+        if (data.user == "guest"){
+            $("#login_form").show(); //show login
+            $("#logout_form").hide(); //hides logout button
+            $("#current_user").append("<h3 class='warning'>" + "Please login" + "</h3>");
+        }
+        else{
+            $("#login_form").hide(); //hides login
+            $("#logout_form").show(); //shows logout button
+            $("#current_user").append("<h2>" + "Hi there " + "<b>" + data.loggedInUser.firstName + "</b>" + "</h2>");
+            console.log("loggedInUser Role: " + data.loggedInUser.role);
+            var role = data.loggedInUser.role
+        }
+  }
+
 
   //** Login **
   function logIn() {
@@ -35,7 +81,8 @@ $(function() {
                  password: form["password"].value })
          .done(function() {
             console.log("logged in!"); //to check login has worked
-            location.reload();//Refreshes page to update with logged in user
+            showOptionsBasedOnUserRole("user");
+            //location.reload();//Refreshes page to update with logged in user TODO: here redirect to page based on login user role
             })
          .fail(function(jqXHR, textStatus, errorThrown) {
               sweetAlert('Booh!', 'Wrong credentials, try again!', 'error');
@@ -59,21 +106,89 @@ $(function() {
     });
   }
 
+  //** Determine the options to show user based on their role **
+  function showOptionsBasedOnUserRole(role){
+      console.log("role from showOptionFunction " + role) //this gets triggered and role is correctly identified
+      if (role == "user"){
+        console.log("you're just a user!") //but for some reason the if statement does not get triggered only the else
+        var employeeId = getLoggedInEmployeeIdNumber();
+        //redirect url to url with employeeId
+        var url = 'employee_view.html?employeeId=' + employeeId;
+        location.assign(url);
+        showUserDashboard(); //This is getting triggered so why not the alert
+        }
+      else if (role == "manager"){
+        console.log("you're manager!");
+        showManagerDashboard();
+        }
+      else if (role == "admin"){
+        console.log("you're admin!");
+        showAdminDashboard();
+        }
+      else if (role == "developer"){
+        console.log("you're a developer!");
+        showDeveloperDashboard();
+        }
+      else {
+      console.log("No corresponding role found for this user. Please contact system admin")
+      }
+  }
+
+function getLoggedInEmployeeIdNumber() {
+    var url = 'api/currentUserId'
+    $.get(url)
+    .done(function(data) {
+    console.log("data: " + data);
+        return data;
+    })
+    .fail(function( jqXHR, textStatus ) {
+    });
+}
+
+  function showUserDashboard(){
+    sweetAlert("triggered show user dashboard"); //this is working
+    showCreateBookingButton();
+    //loadBookingsByEmployee TODO: function to show employees bookings
+  }
+
+  function showManagerDashboard(){
+    showCreateBookingButton();
+    //loadAllBookings TODO: function to show all bookings
+  }
+
+  function showAdminDashboard(){
+    showCreateUserButton();
+    showCreateBookingButton();
+    //loadAllBookings TODO: function to show all bookings (same as manager)
+  }
+
+  function showDeveloperDashboard(){
+    showCreateUserButton();
+    showCreateBookingButton();
+  }
+
+  // if user need to show create booking button, and show own bookings button (or show all directly)
+  //if manager need show create booking button and show all bookings button (or just show all directly with filter options)
+  //if admin same as manager plus create new user button
+  //}
+
+
   //** Show New User account creation form **
-  function showCreateAccountForm() {
-    $("#create_account_button").click(function(evt) {
+  function showCreateUserForm() {
+    $("#create_user_button").click(function(evt) {
         $("#login_form").hide(); //hides login
         $("#logout_form").hide(); //hides logout button
-        $("#signup_form").show(); //shows sign up
+        $("#create_user_form").show(); //shows sign up
+        $("#create_booking_form").hide();
     });
   }
 
-  //** Sign up  **
-  function signUp() {
-        $("#signup_button").click(function(evt) {
+  //** Create New User **
+  function createNewUser() {
+        $("#create_user_button").click(function(evt) {
         evt.preventDefault(); //used with forms to prevent them getting submitted automatically - used with 'onsubmit="return false"' in html
         var form = evt.target.form; //this is needed later to gets the values from the form
-        if (validateSignupForm() == true) {
+        if (validateCreateUserForm() == true) {
                 $.post("/api/employees",
                        { firstName: form["firstName"].value,
                          surname: form["surname"].value,
@@ -93,20 +208,20 @@ $(function() {
         });
   }
 
-   //** Validate form for signup **
+  //** Validate form for creating new users **
   //check all fields are filled in and email has correct format
-  function validateSignupForm() {  //TODO maybe break these down into individual functions would be cleaner
-      var name = document.forms["signup_form"]["firstName"].value;
+  function validateCreateUserForm() {  //TODO maybe break these down into individual functions would be cleaner
+      var name = document.forms["create_user_form"]["firstName"].value;
           if (name == "") {
               sweetAlert("First Name must be filled out");
               return false;
           }
-      var surname = document.forms["signup_form"]["surname"].value;
+      var surname = document.forms["create_user_form"]["surname"].value;
           if (surname == "") {
               sweetAlert("Surname must be filled out");
               return false;
           }
-      var email = document.forms["signup_form"]["email"].value;
+      var email = document.forms["create_user_form"]["email"].value;
           if (email == "") {
               sweetAlert("Email must be filled out");
               return false;
@@ -117,22 +232,22 @@ $(function() {
               sweetAlert("Not a valid e-mail address");
                return false;
           }
-      var username = document.forms["signup_form"]["username"].value;
+      var username = document.forms["create_user_form"]["username"].value;
           if (username == "") {
               sweetAlert("Username must be filled out");
               return false;
           }
-      var password = document.forms["signup_form"]["password"].value;
+      var password = document.forms["create_user_form"]["password"].value;
           if (password == "") {
               sweetAlert("Password must be filled out");
               return false;
           }
-      var accommodationName = document.forms["signup_form"]["accommodationName"].value;
+      var accommodationName = document.forms["create_user_form"]["accommodationName"].value;
          if (accommodationName == "null") {
               sweetAlert("Workplace must be filled out");
               return false;
          }
-      var role = document.forms["signup_form"]["role"].value;
+      var role = document.forms["create_user_form"]["role"].value;
           if (role == "null") {
               sweetAlert("Role must be filled out");
               return false;
@@ -140,16 +255,15 @@ $(function() {
       return true;
   }
 
-  //** Show New User account creation form **
+
+
+  //** Show New Booking creation form **
   function showCreateBookingForm() {
       $("#create_booking_button").click(function(evt) {
-          $("#login_form").hide(); //hides login
-          $("#logout_form").hide(); //hides logout button
-          $("#signup_form").hide(); //hides sign up
-          $("#create_booking_form").show(); //hide create booking form
-          //TODO: either have create guest and booking as separte forms to be shown/hidden or redirect
-          //TODO: to new page
-          //location.assign(url);//Takes user to game view for new game
+          $("#login_form").hide();
+          $("#logout_form").hide();
+          $("#create_user_form").hide();
+          $("#create_booking_form").show(); //show create booking form
       });
   }
 
@@ -181,9 +295,8 @@ $(function() {
         });
   }
 
-
   //** Validate form for create new booking**
-  //group together various validation functions
+  //groups together various validation functions
   function validateBookingForm() {
     if (checkBookingFormFieldsNotEmpty() == false){
           return false;
@@ -243,27 +356,13 @@ $(function() {
       return true;
   }
 
-//function populateDropdownWithAllAccommodationNames() {
-//  $.get("/api/all_accommodation")
-//  .done(function(data) {
-//      for (var i = 0; i < data.length; i++) {
-//        var accommodationList = '<option value=' + data[i].id + ' >' + data[i].name + '</option>'
-//        $("#accommodationList").append(accommodationList);
-//        $("#workplaceList").append(accommodationList);
-//        }
-//  })
-//  .fail(function( jqXHR, textStatus ) {
-//  });
-//}
-
-
-
+  //TODO: need to change this to ONLY show employees with the role 'user'- best to change it at the DTO level directly
 function populateDropdownWithAllEmployeeUsernames() {
 //need to trigger this once the accommodation name has been selected
     $('#accommodationList').change(function() {
         //reset drop down menu to avoid duplicating employees
         $("#employeeList").html('<option value="null"> Choose person </option>');
-        var accomName = $('#accommodationList').val(); //gets the gamePlayer(gp) id number from the url
+        var accomName = $('#accommodationList').val(); //gets the user id number from the url
         console.log(accomName);
         var url = "/api/all_employees_usernames/" + accomName //inserts the accommodation name into the api
         console.log(url);
@@ -314,6 +413,8 @@ function isCheckOutDateAfterCheckInDate(){
     sweetAlert("Check Out Date must be after Check In Date!")
     return false;
 }
+
+
 
 
 

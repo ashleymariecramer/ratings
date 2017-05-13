@@ -1,0 +1,25 @@
+
+/* Initial screen with login option visible only */
+#logout_form{ display: none; }
+#create_user_form{ display: none; }
+#signup_form{ display: none; }
+#create_booking_form{ display: none; }
+
+/* Also hide all other buttons only to be revealed for logged in users with corresponding authorization */
+#create_booking_button{ display: none; }
+#create_user_button{ display: none; }
+#show_all_bookings_button{ display: none; }
+#show_my_bookings_button{ display: none; }
+
+/* Hide all views initially by div class */
+.employee_view{ display: none; }
+.manager_view_all{ display: none; }
+.manager_view_blackSwanBCN{ display: none; }
+.manager_view_blackSwanSVQ{ display: none; }
+
+
+.log-in-form {
+  border: 1px solid #cacaca;
+  padding: 1rem;
+  border-radius: 0;
+}

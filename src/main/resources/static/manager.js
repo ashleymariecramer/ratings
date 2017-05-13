@@ -13,6 +13,8 @@ function hideAllTables(){
     $('.manager_view_blackSwanSVQ').hide();
 }
 
+
+
 //TODO: Need to reset tables each time
 function populateTableWithBookings() {
     $('#filter_buttons_for_bookings').children().click(function(){
